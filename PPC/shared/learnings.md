@@ -5,6 +5,7 @@ Record every concluded test here, winners and losers alike. Newest entries go at
 
 | Date | Platform | Test / topic | Result (with numbers) | Evidence | Apply elsewhere? |
 |---|---|---|---|---|---|
+| 2026-11-02 | Meta / WhatsApp | SIB-04 annual filings: Click-to-WhatsApp vs Instant Form (last 30d) | WA ₹17,449 → 52 chats, 3 won ₹52,625 (3.0×); Form ₹21,559 → 59 leads, 3 won ₹33,500 (1.55×). n=3 each, directional | Account data (Meta + Zoho `Meta_Campaign`) | Keep WhatsApp for deadline services; tag WA leads with Meta ad set in Zoho |
 | 2026-11-02 | All | Channel mix planned in ChatGPT 2025–26 vs CRM | Plans gave Google 40–50% and Meta 20–30%. CRM Nov25–Oct26: Facebook+Instagram ≈96% of ad-attributed won ₹ (164 won deals); Google 0 won | Account data (Zoho) + chats 5, 7, 8, 16 | Judge every channel on CRM won deals, never on CPL or platform conversions |
 | 2026-11-02 | Google Ads | Dec-25 Trademark + Subsidiary campaigns | ₹99,927 spend, 4,430 clicks, 38.94 platform conv, 84 CRM leads, **0 won**. Subsidiary CPC ₹374.6 | Account data (Supermetrics + Zoho) | Don't relaunch without negatives, conversion import and policy-safe copy |
 | 2025-04 → 2026-06 | Google Ads | Ad disapprovals under the government documents / official services policy | Still unresolved in Jun 2026 | Chats 8, 16 | Use chat 16's "private firm, not Government" wording on every platform; find the exact policy trigger first |
