@@ -32,5 +32,9 @@ Read this file at the start of every session. Then read `shared/` before giving 
 `<Platform>_<Objective>_<Service>_<Geo>_<Audience>_<YYYYMM>`
 e.g. `GADS_Search_PvtLtdReg_PanIndia_Intent_202611`, `META_Leads_GSTReg_Delhi_LAL1_202611`
 
+## Operating model
+Planning and review follow the Elephant-Goldfish Model. See `docs/egm-operating-plan.md`.
+EGM artifact directory: PPC/egm/runs/<YYYY-MM-DD>-<slug>
+
 ## Open items
 See `docs/migration-checklist.md` for moving in past Cowork and ChatGPT work.

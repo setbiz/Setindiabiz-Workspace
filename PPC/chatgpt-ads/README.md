@@ -11,7 +11,7 @@
 - Offline / CRM conversion import: TODO
 
 ## Data access from Claude
-- No connector yet. Use CSV exports from ads.openai.com
+- Supermetrics source `CGPTA` (early access, needs login). Fallback: CSV export from ads.openai.com into reports/raw/
 
 ## Current structure
 | Campaign | Objective | Service | Daily budget (₹) | Status |
