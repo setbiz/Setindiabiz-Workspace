@@ -2,6 +2,8 @@
 
 ## A. ChatGPT → repo (export first, delete last)
 
+> **Setindiabiz uses a ChatGPT Business workspace, which has no data export. Use `docs/chatgpt-browser-migration.md` instead.** The steps below apply only to personal Free, Plus or Pro accounts.
+
 Deleting a ChatGPT chat is permanent, and a chat can't be exported after it's deleted. Follow the steps in order.
 
 1. ☐ **Export.** ChatGPT → profile icon → **Settings → Data controls → Export data → Confirm export**. A download link is emailed to you. It can take a few minutes up to about 24 hours, and the link expires, so download promptly.
