@@ -70,6 +70,19 @@
 4. ☐ **Fill `PPC/shared/`**, especially AOV and lead→sale % per service. Without these the CFO reviewer will block budget decisions.
 5. ☐ **Create the scheduled tasks** (Claude does this once 1–4 are done): weekly on Monday morning IST, monthly on the 1st working day. Connectors granted: Meta Ads, Supermetrics, Zoho CRM.
 
+## 5a. Status (2026-11-02)
+- [x] EGM enabled for the project in `.claude/settings.json` and installed (v0.1.0) in the setup session.
+- [x] `shared/business-context.md` and `kpis.md` filled from the website and Zoho CRM. Still TODO: confirm the gross margin %, and confirm that the `W-*` stages mean won.
+- [x] Scheduled tasks created: **PPC weekly EGM review** (Mon 10:17 IST, first run 9 Nov 2026) and **PPC monthly budget and drift review** (2nd of each month 11:43 IST). Both target repo `setbiz/Setindiabiz-Workspace`.
+- [ ] GitHub repo `setbiz/Setindiabiz-Workspace` must be created by the owner (the session can't create repos), then pushed.
+- [ ] Connectors must be added to both scheduled tasks in claude.ai: Meta Ads, Supermetrics Marketing Analytics, Zoho CRM. Without them the runs report "missing data".
+
+## 5b. Data-source decision (Supermetrics)
+- Team "Team setindiabiz" has **no Supermetrics subscription** (`LICENSE_NOT_FOUND`), so queries fail even for sources that are logged in.
+- Meta (Facebook + Instagram) accounts for ~97% of ad-attributed won revenue (CRM, Nov 2025–Oct 2026). It's covered free by the native **Meta Ads** connector. The CRM is covered free by the native **Zoho CRM** connector.
+- **Decision:** don't buy Growth. Start the **14-day free trial** (no card) with the AI Chats destination for Google Ads, Microsoft Advertising and ChatGPT Ads. If the first two weekly runs are useful, subscribe to **Starter** (3 sources; pricing at supermetrics.com/pricing).
+- LinkedIn, Reddit and X have no CRM leads and aren't running, so no paid source for them yet. Add one when a platform launches. X Ads is a Premium source on Supermetrics; use a CSV export for it.
+
 ## 6. Guardrails
 - Goldfish are read-only and get no summary of the Elephant's reasoning, only files. That's what makes the review independent.
 - A same-context "review" doesn't count. If subagents are unavailable, the run stops.
