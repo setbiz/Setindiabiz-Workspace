@@ -57,7 +57,7 @@ Caveats (measurement-skeptic): leads are counted by Created_Time and deals by Cl
 
 ## Observations to investigate (not conclusions)
 - Google Ads generated only 84 CRM leads and 0 won deals in 12 months. Either spend is low, or there's a tracking or `Lead_Source` tagging gap.
-- Most paid revenue comes from Meta (Facebook + Instagram = ~97% of ad-attributed won ₹).
+- Most paid revenue comes from Meta: Facebook + Instagram ≈ 95.9% of ad-attributed won ₹; including WhatsApp ads (also Meta) ≈ 99.9% (corrected 2026-11-02).
 - Organic "SEO – Google" (2,251 leads) far outweighs "Advt – Google" (84).
 
 ## Personas / geography / competitors

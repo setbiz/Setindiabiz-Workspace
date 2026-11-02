@@ -79,7 +79,7 @@
 
 ## 5b. Data-source decision (Supermetrics)
 - Team "Team setindiabiz" has **no Supermetrics subscription** (`LICENSE_NOT_FOUND`), so queries fail even for sources that are logged in.
-- Meta (Facebook + Instagram) accounts for ~97% of ad-attributed won revenue (CRM, Nov 2025–Oct 2026). It's covered free by the native **Meta Ads** connector. The CRM is covered free by the native **Zoho CRM** connector.
+- Meta (Facebook + Instagram) accounts for ~96% of ad-attributed won revenue (≈99.9% incl. WhatsApp ads) (CRM, Nov 2025–Oct 2026). It's covered free by the native **Meta Ads** connector. The CRM is covered free by the native **Zoho CRM** connector.
 - **Purchased 2026-11-02:** Supermetrics **Starter, monthly** ($49/month): Google Ads `AW` (account 1859576856) and Microsoft Advertising `AC` (accounts 150488150, 150329248), destination AI chats. Licence 2091472 is VALID. Meta stays on the native connector. Baselines are in `google-ads/reports/` and `microsoft-ads/reports/`. Supermetrics also supports campaign creation (`manage_campaign`), so approved campaigns can be built PAUSED directly.
 - LinkedIn, Reddit and X have no CRM leads and aren't running, so no paid source for them yet. Add one when a platform launches. X Ads is a Premium source on Supermetrics; use a CSV export for it.
 
