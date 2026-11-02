@@ -2,7 +2,7 @@
 
 Generated 2026-11-02 after the import was committed and pushed (`setbiz/Setindiabiz-Workspace`, `PPC/imports/chatgpt/`).
 
-## Batch 1: delete now (25 chats, fully captured)
+## Batch 1: DONE. All 25 deleted by the owner on 2026-11-02 (titles verified by Claude in Chrome first)
 
 ```
 Task: permanently DELETE exactly the ChatGPT chats listed below, and nothing else.
