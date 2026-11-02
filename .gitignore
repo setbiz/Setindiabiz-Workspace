@@ -1,0 +1,21 @@
+# Raw exports: may contain personal data (DPDP Act, 2023)
+imports/chatgpt/raw/*
+!imports/chatgpt/raw/.gitkeep
+*.zip
+
+# Customer / audience lists: never commit
+**/audiences/*.csv
+**/audiences/*.xlsx
+*customer*list*
+*.pii.*
+
+# Secrets
+.env
+.env.*
+*.key
+*credentials*.json
+*token*
+
+# OS / editor
+.DS_Store
+__pycache__/
