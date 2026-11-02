@@ -80,7 +80,7 @@
 ## 5b. Data-source decision (Supermetrics)
 - Team "Team setindiabiz" has **no Supermetrics subscription** (`LICENSE_NOT_FOUND`), so queries fail even for sources that are logged in.
 - Meta (Facebook + Instagram) accounts for ~97% of ad-attributed won revenue (CRM, Nov 2025–Oct 2026). It's covered free by the native **Meta Ads** connector. The CRM is covered free by the native **Zoho CRM** connector.
-- **Decision (trial already used):** buy **Starter, billed monthly**, with sources Google Ads, Microsoft Advertising and ChatGPT Ads, and the destination "Claude, ChatGPT & Copilot" (AI Chats). Switch to annual (~20% cheaper) after 3 months if it's kept. Don't buy Growth.
+- **Decision (2026-11-02):** purchase **on hold**, because there are no live Google or Microsoft campaigns yet. Buy **Starter, monthly**, with Google Ads + Microsoft Advertising (the 2 included sources) and the **AI chats** destination, about 1 week before the first Google or Microsoft campaign launches. Don't add Facebook Ads, which the native Meta connector already covers for free. Until then, the weekly cycle uses Meta + Zoho only and reports Google and Microsoft as "no live campaigns". Campaign build sheets are delivered as Google Ads Editor import files.
 - LinkedIn, Reddit and X have no CRM leads and aren't running, so no paid source for them yet. Add one when a platform launches. X Ads is a Premium source on Supermetrics; use a CSV export for it.
 
 ## 6. Guardrails
