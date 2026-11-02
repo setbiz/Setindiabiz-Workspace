@@ -11,7 +11,7 @@ Deleting a ChatGPT chat is permanent, and a chat can't be exported after it's de
 3. ☐ **Bring the ZIP into Claude Code.** Upload it to the session or put it in `imports/chatgpt/raw/`. That folder is git-ignored, so the full export never gets committed.
 4. ☐ **Run the importer:**
    ```bash
-   python3 -I scripts/import_chatgpt_export.py imports/chatgpt/raw/<your-export>.zip
+   cd PPC && python3 -I scripts/import_chatgpt_export.py imports/chatgpt/raw/<your-export>.zip
    ```
    Options: `--min-hits 2` (looser filter), `--all` (import everything), `--extra-keywords "gst,trademark,llp"`.
 5. ☐ **Review `imports/chatgpt/INDEX.md`** to confirm the right chats were picked up.

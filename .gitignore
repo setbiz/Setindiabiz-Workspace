@@ -1,6 +1,6 @@
 # Raw exports: may contain personal data (DPDP Act, 2023)
-imports/chatgpt/raw/*
-!imports/chatgpt/raw/.gitkeep
+**/imports/chatgpt/raw/*
+!**/imports/chatgpt/raw/.gitkeep
 *.zip
 
 # Customer / audience lists: never commit
