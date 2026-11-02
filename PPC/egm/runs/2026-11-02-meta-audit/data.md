@@ -45,3 +45,27 @@ Top recommendations by points: Advantage+ creative enhancements bundle (9 pts, "
 - 2 Nov: SIB-02 TM Interest ad set budget changed (old ₹1,200; new value truncated in log) and targeting/locations changed.
 - 21 Oct: SIB-05 ads activated by "ads MCP server", including "S1 | From USD 499".
 - No automated-rule events in this window, so business-hours rules / #HOLD can't be verified from the log.
+
+## ADDENDUM (after Goldfish round 1): campaign-level CRM backfill [Zoho `Meta_Campaign` field on Deals]
+Deals created 4 Aug–2 Nov 2026, Lead_Source Advt-FB/IG/WA, won = `W-*` stages. Sum = ₹6,51,039, matching the total above.
+| Zoho Meta_Campaign | Won deals | Won ₹ | Meta spend ₹ (90d) | Revenue/spend [calc] | Cost/won ₹ [calc] | AOV ₹ [calc] |
+|---|---|---|---|---|---|---|
+| #IND4 - CCFS | 18 | 4,34,619 | 1,72,141 | **2.52×** | 9,563 | 24,145 |
+| SIB-04 Annual Filings | 6 (+1 Qualified) | 86,125 | 80,521 | 1.07× (launched 9 Oct; pipeline open) | 13,420 | 14,354 |
+| #IND3 - Trademark | 18 | 37,533 | 44,622 | 0.84× | 2,479 | 2,085 |
+| SIB-02 Trademark (+ "- Copy") | 3 | 6,500 | 10,682 | 0.61× (early) | 3,561 | 2,167 |
+| #IND 1 — Incorporation (**assumed = SIB-01**, renamed; confirm) | 7 | 30,368 | 1,20,202 | **0.25×** | 17,172 | 4,338 |
+| #IND 1 — Business Registration - Lead | 2 | 3,500 | (not in 90d spend) | — | — | — |
+| #IND5 - DPIIT | 3 | 28,698 | 0 in window (older leads) | — | — | — |
+| #IND2 — Annual Returm - Lead | 1 | 5,000 | 0 in window | — | — | — |
+| (blank, likely WhatsApp) | 3 | 18,696 | — | — | — | — |
+| SIB-05 India Entry | 0 | 0 | 22,760 | 0× | — | — |
+SIB-01 lead→won ≈ 7/687 = 1.0% [calc, Meta leads].
+
+By Zoho `Product_Category`, won ₹: Annual Filing 15 deals ₹4,52,192; Striking Off 7 ₹91,348; TM Filing in India 20 ₹40,233 (AOV ≈₹2,012); Start Company 6 ₹29,565; DPIIT 1 ₹4,999; others small.
+**Reading:** compliance and deadline work (CCFS, annual filing, striking off) drives ~84% of Meta-attributed revenue. Incorporation and trademark have low AOV and lose money at current CPLs, even before margin.
+
+## ADDENDUM: live ad copy (Meta creatives, ACTIVE) [Meta]
+- Annual filing creatives (created 1 Nov, for SIB-04): "Annual filing pack ₹7,499 + GST … Government fees at actuals … Setindiabiz is a private firm, not affiliated with MCA". Deadlines cite Companies Act 2013 ss. 137(1), 92(4), 403. **Claim "Setindiabiz has served 25,000+ businesses"** conflicts with the website's "18K+ clients".
+- India entry (SIB-05): branch office / liaison office copy states RBI eligibility (USD 100k / 50k net worth). "Indian subsidiary from USD 499 … Government fees, stamp duty and DSC extra, at actual cost". Transparent wording; price must be honoured in quotes.
+- Active ad names: "INC-F1 | Rs2499 + GST | Form" (SIB-01, ₹30,109 last 30d, CPL ₹175), "TM-F1 | Rs1999 + GST | Form | Interest" (SIB-02), "TM-F1 | … | Lists" (₹0 spend so far, uses customer lists).

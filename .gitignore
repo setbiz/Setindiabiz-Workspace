@@ -19,3 +19,8 @@
 # OS / editor
 .DS_Store
 __pycache__/
+
+# Any spreadsheet/contact export anywhere in PPC (compliance review 2026-11-02)
+PPC/**/*.csv
+PPC/**/*.xlsx
+*contacts*
