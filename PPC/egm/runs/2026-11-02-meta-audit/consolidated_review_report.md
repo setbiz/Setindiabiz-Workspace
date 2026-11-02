@@ -45,3 +45,13 @@
 2. Confirm "#IND 1 — Incorporation" in Zoho = SIB-01 (renamed).
 3. Who runs the "ads MCP server" sessions (Cowork?), and why was SIB-04 paused today?
 4. Source of each customer list (MCA public data, CRM, purchased?).
+
+## Owner resolution (2 Nov 2026)
+| # | Decision |
+|---|---|
+| 1 | **Declined.** Owner accepts the data-protection position for now. Customer lists stay, including for annual-return campaigns. Recorded as an owner decision. |
+| 2 | **Declined.** "25,000+ businesses" is verifiable per owner, so it stays. Follow-up: update the website's "18K+ clients" so both match. All prices (₹7,499 / ₹2,499 / ₹1,999 / USD 499) confirmed real. |
+| 3 | **Revised.** India-entry AOV from Zoho (FDI category, 12 months, all sources): 17 won, ₹14,67,582, so **≈₹86,300 per deal**. At CPL ₹3,793 and 50% margin, break-even needs lead→won ≥ 8.8% [calc]. No longer "pause": keep running with a ₹15K further cap and judge on CRM-qualified India-entry leads. |
+| 4 | Pending owner confirmation to reactivate SIB-04 (with lists, per owner). The AI session that paused it was Claude (Cowork). |
+| 5 | **Approved.** SIB-01 ad-set budget ₹2,500 → ₹1,250 staged as a draft. Note: last 7 days SIB-01 spent only ₹3,439 (≈₹491/day) for 24 leads at ₹143, so the old budget wasn't binding. |
+| 8 | Owner confirmed the "ads MCP server" sessions are Claude. Rule stands: log every change in `meta/changelog.md`. |
