@@ -55,3 +55,10 @@
 | 4 | Pending owner confirmation to reactivate SIB-04 (with lists, per owner). The AI session that paused it was Claude (Cowork). |
 | 5 | **Approved.** SIB-01 ad-set budget ₹2,500 → ₹1,250 staged as a draft. Note: last 7 days SIB-01 spent only ₹3,439 (≈₹491/day) for 24 leads at ₹143, so the old budget wasn't binding. |
 | 8 | Owner confirmed the "ads MCP server" sessions are Claude. Rule stands: log every change in `meta/changelog.md`. |
+
+
+## Update (Cowork session log, 2 Nov 2026 evening)
+- **Confirmed:** `#IND 1 — Incorporation` = SIB-01 (campaign 120240912969660449 renamed 12:51). The SIB-01 0.25× figure stands.
+- **Confirmed:** the SIB-04 pause at 11:35 was the owner's decision, carried out via a Claude (Cowork) session.
+- **New issue:** MCA General Circular 05/2026 makes the SIB-04 deadline copy inaccurate. See `meta/changelog.md`.
+- **New issue:** prepaid balance vs ₹13,750/day of budgets. ₹25,000 was added 08:26 and ₹6,306 was spent by evening.
