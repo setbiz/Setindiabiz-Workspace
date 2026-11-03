@@ -1,0 +1,319 @@
+void automation.sib_sendMetaCAPI1(String moduleName,String recordId)
+{
+// v3 15 Oct 2026 (W6, CTWA_Click_Capture_Plan_2026-10-14 section 2).
+//  WhatsApp click branch: source "Advt - WhatsApp" and a WhatsApp ad click for this customer's phone in the last 7 days
+//  (WA_Ad_Clicks, via standalone.sib_wa_click_lookup) -> the event goes as action_source business_messaging
+//  to the WhatsApp dataset 1442186757791533 with only the click ID and WhatsApp account ID (no email or phone):
+//      ValidLead -> LeadSubmitted, QualifiedLead -> QualifiedLead, Committed -> InitiateCheckout, Purchase -> Purchase (+ value INR).
+//  Deals use this branch only for Committed and Purchase (a Deal's QualifiedLead stays system_generated: see below).
+//  No click, an empty WhatsApp token, a failed lookup, or Meta rejecting it -> the v2 system_generated event
+//  to dataset 1242417817083521. A timeout or unreadable answer is marked as sent and never resent (no double count).
+//  Meta_CAPI_Event keeps the CRM event name (ValidLead / QualifiedLead / Committed / Purchase) whichever channel sent it,
+//  so one guard covers both channels and a stage is never reported twice (Meta does not dedupe business_messaging events).
+// v2 14 Oct 2026.
+//  1. Paid-Meta sources now include "Advt - WhatsApp" (Leads and Deals).
+//  2. Each event is sent once per record. Field Meta_CAPI_Event (Leads and Deals) holds the highest event sent;
+//     an event is sent only if it ranks above it: ValidLead 1 < QualifiedLead 2 < Committed 3 < Purchase 4.
+//     Before v2 every Stage edit inside the won stages (Won -> W-Login -> W-Finance -> W-SKV ...) sent another Purchase.
+//  3. event_id = <recordId>-<eventName>, and custom_data.lead_source.
+// Same body in both copies; only the first line differs (Lead copy: sib_sendMetaCAPI, Deal copy: sib_sendMetaCAPI1).
+datasetId = "1242417817083521";
+apiVersion = "v21.0";
+waDatasetId = "1442186757791533";
+waApiVersion = "v26.0";
+waDefaultWaba = "2287130705376253";
+accessToken = zoho.crm.getOrgVariable("meta_capi_access_token");
+rec = zoho.crm.getRecordById(moduleName,recordId.toLong());
+metaSources = {"Advt - Facebook","Advt - Instagram","Advt - WhatsApp","PPC Meta Insta"};
+rank = Map();
+rank.put("ValidLead",1);
+rank.put("QualifiedLead",2);
+rank.put("Committed",3);
+rank.put("Purchase",4);
+lastEvent = ifnull(rec.get("Meta_CAPI_Event"),"").toString();
+eventName = "";
+value = 0;
+actionSource = "system_generated";
+email = "";
+phone = "";
+src = "";
+waPhones = List();
+if(moduleName == "Leads")
+{
+	src = ifnull(rec.get("Lead_Source"),"").toString();
+	if(metaSources.contains(src) == false)
+	{
+		return;
+	}
+	// Sent before v2 without a recorded event: unknown which one went, so do not send again.
+	if(ifnull(rec.get("Meta_CAPI_Sent"),false) == true && lastEvent == "")
+	{
+		info "Meta CAPI: lead sent before v2, event unknown - skipped";
+		return;
+	}
+	rmq = ifnull(rec.get("RM_Lead_Quality"),"").toString();
+	tlq = ifnull(rec.get("Mkt_Leat_Quality"),"").toString();
+	csdq = ifnull(rec.get("CSD_Lead_Quality"),"").toString();
+	status = ifnull(rec.get("Lead_Status"),"").toString();
+	validSet = {"Valid - RM Working","Valid - NIL RM Action","Valid - Casual RM Action","Valid - Good RM Action"};
+	progressSet = {"Negotiation","Proposal Sent","Payment Pending"};
+	if(progressSet.contains(status))
+	{
+		eventName = "QualifiedLead";
+	}
+	else if(validSet.contains(rmq) || validSet.contains(tlq) || validSet.contains(csdq) || status == "Valid Lead")
+	{
+		eventName = "ValidLead";
+	}
+	email = ifnull(rec.get("Email"),"").toString();
+	phone = ifnull(rec.get("Phone"),"").toString();
+	if(phone == "")
+	{
+		phone = ifnull(rec.get("Mobile"),"").toString();
+	}
+	waPhones.add(ifnull(rec.get("WhatsApp_Number"),"").toString());
+	waPhones.add(phone);
+}
+else if(moduleName == "Deals")
+{
+	con = rec.get("Contact_Name");
+	if(con == null)
+	{
+		return;
+	}
+	contact = zoho.crm.getRecordById("Contacts",con.get("id").toLong());
+	src = ifnull(contact.get("Lead_Source"),"").toString();
+	if(metaSources.contains(src) == false)
+	{
+		return;
+	}
+	email = ifnull(contact.get("Email"),"").toString();
+	phone = ifnull(contact.get("Phone"),"").toString();
+	if(phone == "")
+	{
+		phone = ifnull(contact.get("Mobile"),"").toString();
+	}
+	waPhones.add(ifnull(contact.get("WhatsApp_Number"),"").toString());
+	waPhones.add(phone);
+	stage = ifnull(rec.get("Stage"),"").toString();
+	qualifiedSet = {"Qualified","Follow-Up","Negotiation"};
+	committedSet = {"Payment Wait"};
+	wonSet = {"Won","W-SKV","W-SPI","W-CSD","W-Finance","W-Login","W-ACR Login"};
+	if(wonSet.contains(stage))
+	{
+		eventName = "Purchase";
+		value = ifnull(rec.get("Amount"),0);
+	}
+	else if(committedSet.contains(stage))
+	{
+		eventName = "Committed";
+	}
+	else if(qualifiedSet.contains(stage))
+	{
+		eventName = "QualifiedLead";
+	}
+}
+if(eventName == "")
+{
+	return;
+}
+// Once-per-record guard
+if(lastEvent != "" && rank.containKey(lastEvent))
+{
+	if(rank.get(eventName).toLong() <= rank.get(lastEvent).toLong())
+	{
+		info "Meta CAPI: " + eventName + " not above last sent " + lastEvent + " - skipped";
+		return;
+	}
+}
+eventTime = zoho.currenttime.toString().unixEpoch() / 1000;
+sent = false;
+// ---- v3: WhatsApp click branch (business_messaging) ----
+// Deals send only Committed and Purchase this way. A Deal's QualifiedLead stays system_generated, because the
+// converted Lead has usually sent its own QualifiedLead already and Meta would count the click twice.
+waToken = ifnull(zoho.crm.getOrgVariable("meta_wa_access_token"),"").toString().trim();
+if(src == "Advt - WhatsApp" && waToken != "" && (moduleName == "Leads" || eventName != "QualifiedLead"))
+{
+	clid = "";
+	waba = "";
+	tried = List();
+	for each  wp in waPhones
+	{
+		d = ifnull(wp,"").toString().replaceAll("[^0-9]","");
+		if(clid == "" && d.length() >= 10)
+		{
+			k = d.subString(d.length() - 10);
+			if(tried.contains(k) == false)
+			{
+				tried.add(k);
+				try
+				{
+					lkStr = standalone.sib_wa_click_lookup(k);
+					lk = ifnull(lkStr,"{}").toString().toMap();
+					clid = ifnull(lk.get("ctwa_clid"),"").toString();
+					waba = ifnull(lk.get("waba_id"),"").toString();
+				}
+				catch (e)
+				{
+					info "Meta CAPI: click lookup failed - system_generated: " + e;
+					clid = "";
+				}
+			}
+		}
+	}
+	if(clid != "")
+	{
+		if(waba == "")
+		{
+			waba = waDefaultWaba;
+		}
+		waName = eventName;
+		if(eventName == "ValidLead")
+		{
+			waName = "LeadSubmitted";
+		}
+		else if(eventName == "Committed")
+		{
+			waName = "InitiateCheckout";
+		}
+		wud = Map();
+		wud.put("whatsapp_business_account_id",waba);
+		wud.put("ctwa_clid",clid);
+		wcd = Map();
+		wcd.put("lead_source",src);
+		if(eventName == "Purchase")
+		{
+			wcd.put("value",value);
+			wcd.put("currency","INR");
+		}
+		wev = Map();
+		wev.put("event_name",waName);
+		wev.put("event_time",eventTime);
+		wev.put("action_source","business_messaging");
+		wev.put("messaging_channel","whatsapp");
+		wev.put("event_id",recordId + "-" + eventName);
+		wev.put("user_data",wud);
+		wev.put("custom_data",wcd);
+		wList = List();
+		wList.add(wev);
+		wPayload = Map();
+		wPayload.put("data",wList);
+		// ok = accepted; rejected = Meta answered with an error -> fall back to system_generated;
+		// unknown = timeout or unreadable answer -> Meta may have it, so mark it and never send it again.
+		waState = "unknown";
+		try
+		{
+			wResp = invokeurl
+			[
+				url :"https://graph.facebook.com/" + waApiVersion + "/" + waDatasetId + "/events?access_token=" + waToken
+				type :POST
+				parameters:wPayload.toString()
+				content-type:"application/json"
+			];
+			info "Meta CAPI WhatsApp [" + waName + "] -> " + wResp;
+			wStr = ifnull(wResp,"").toString();
+			if(wStr.contains("events_received") && ifnull(wStr.toMap().get("events_received"),0) > 0)
+			{
+				waState = "ok";
+			}
+			else if(wStr.contains("\"error\""))
+			{
+				waState = "rejected";
+			}
+		}
+		catch (e)
+		{
+			info "Meta CAPI WhatsApp: no clear answer (" + e + ")";
+		}
+		if(waState == "rejected")
+		{
+			info "Meta CAPI WhatsApp rejected - falling back to system_generated";
+		}
+		else
+		{
+			if(waState == "unknown")
+			{
+				info "Meta CAPI WhatsApp: unconfirmed - marked, not resent";
+			}
+			sent = true;
+		}
+	}
+	else
+	{
+		info "Meta CAPI: no WhatsApp ad click in the last 7 days - system_generated";
+	}
+}
+// ---- v2 path: system_generated (also the fallback) ----
+if(sent == false)
+{
+	userData = Map();
+	leadId = ifnull(rec.get("leadchain0__Social_Lead_ID"),"").toString();
+	if(leadId != "")
+	{
+		userData.put("lead_id",leadId);
+	}
+	if(email != "")
+	{
+		userData.put("em",zoho.encryption.sha256(email.toLowerCase().trim()));
+	}
+	if(phone != "")
+	{
+		phNorm = phone.replaceAll("[^0-9]","");
+		if(phNorm.length() == 10)
+		{
+			phNorm = "91" + phNorm;
+		}
+		userData.put("ph",zoho.encryption.sha256(phNorm));
+	}
+	if(userData.size() == 0)
+	{
+		return;
+	}
+	cd = Map();
+	cd.put("lead_source",src);
+	if(eventName == "Purchase")
+	{
+		cd.put("value",value);
+		cd.put("currency","INR");
+	}
+	event = Map();
+	event.put("event_name",eventName);
+	event.put("event_time",eventTime);
+	event.put("action_source",actionSource);
+	event.put("event_id",recordId + "-" + eventName);
+	event.put("user_data",userData);
+	event.put("custom_data",cd);
+	dataList = List();
+	dataList.add(event);
+	payload = Map();
+	payload.put("data",dataList);
+	endpoint = "https://graph.facebook.com/" + apiVersion + "/" + datasetId + "/events?access_token=" + accessToken;
+	response = invokeurl
+	[
+		url :endpoint
+		type :POST
+		parameters:payload.toString()
+		content-type:"application/json"
+	];
+	info "Meta CAPI [" + eventName + "] -> " + response;
+	received = ifnull(response.get("events_received"),0);
+	if(received > 0)
+	{
+		sent = true;
+	}
+}
+if(sent)
+{
+	upd = Map();
+	upd.put("Meta_CAPI_Event",eventName);
+	if(moduleName == "Leads")
+	{
+		upd.put("Meta_CAPI_Sent",true);
+	}
+	noTrig = Map();
+	emptyList = List();
+	noTrig.put("trigger",emptyList);
+	u = zoho.crm.updateRecord(moduleName,recordId.toLong(),upd,noTrig);
+	info "Meta CAPI: marked " + eventName + " -> " + u;
+}
+}

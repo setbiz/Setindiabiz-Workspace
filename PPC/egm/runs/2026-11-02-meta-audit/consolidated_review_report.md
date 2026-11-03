@@ -62,3 +62,11 @@
 - **Confirmed:** the SIB-04 pause at 11:35 was the owner's decision, carried out via a Claude (Cowork) session.
 - **New issue:** MCA General Circular 05/2026 makes the SIB-04 deadline copy inaccurate. See `meta/changelog.md`.
 - **New issue:** prepaid balance vs ₹13,750/day of budgets. ₹25,000 was added 08:26 and ₹6,306 was spent by evening.
+
+## Correction (3 Nov 2026): context from the Cowork "Meta Ads - Optimisation" project
+The audit was drafted without the Cowork project files, which arrived in the Claude export on 3 Nov (`meta/history/cowork-meta-ads-project/`). They change these points:
+- **Conversions API already exists.** Zoho → Meta CAPI runs through Deluge functions: `sib_sendMetaCAPI` v3 and `sib_capisweep` v4 (15 Oct), plus click-attributed CAPI for WhatsApp ("W6", 15 Oct). Action 9 ("set up CAPI") becomes "check CAPI health and event match quality". `Change_Log_2026-10-14_CAPI-All-Signals.md` should be read for the legal basis already recorded.
+- **Lead quality is already tracked daily** by `valid %`, `junk %`, `₹ per valid` and Why_Disqualified (`Lead_Quality_Watch_Log_*.md`). The EGM weekly review should use cost per valid lead from these logs as its secondary metric, after revenue per ₹.
+- **The 175-lead Meta vs Zoho gap** (Action 6) may be partly the duplicate detector (`detect_duplicate_lead_v2`) merging repeat enquiries and the Lead_Source migration. Check both before treating it as lost leads.
+- **Speed-to-lead is a known loss driver.** 94 paid leads were unworked for more than 24 h on 2 Nov. The project's baseline puts ≈51% of losses down to the sales process. SIB-01's 0.25× may be partly follow-up, not only targeting.
+- **The ICSI request on fee relief** was being tracked since 22 Oct, which is why GC 05/2026 was expected.

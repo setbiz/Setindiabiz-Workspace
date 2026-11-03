@@ -1,0 +1,77 @@
+map sib04ChatFallback(string payload)
+{
+	// SIB-04, 8 Oct 2026 (Sanjeev): Zoho Flow "SIB-04 chat fallback - 1 min to Customer Support".
+	// SalesIQ data workflow (brand Compliance & ACR, event conversation.transfer.initiated) posts here;
+	// the flow waits 1 minute, then this function hands the conversation id to the CRM function
+	// sib04_siq_transfer (connection sib_siq_transfer with SalesIQ.conversations.READ + UPDATE),
+	// which transfers the chat to Customer Support if no human operator has picked it.
+	// v3 15:40: CRM bridge - Flow's own SalesIQ connections lack conversations.UPDATE (error 1009).
+	// v4 16:55: conv_id passed as a URL parameter (the form-body "arguments" never reached the CRM function).
+	// Live in Flow as version 1.4, saved 08-10-2026 4:53:58 PM.
+	res = Map();
+	crmFn = "https://www.zohoapis.com/crm/v7/functions/sib04_siq_transfer/actions/execute?auth_type=apikey&zapikey=<REDACTED - see Flow function>";
+	p = payload.toMap();
+	if(p == null)
+	{
+		res.put("status","payload is not JSON");
+		return res;
+	}
+	ent = p;
+	if(p.containKey("entity_data"))
+	{
+		ent = p.get("entity_data");
+	}
+	else if(p.containKey("entity"))
+	{
+		ent = p.get("entity");
+	}
+	else if(p.containKey("data"))
+	{
+		ent = p.get("data");
+	}
+	convId = ifnull(ent.get("conversation_id"),"").toString();
+	if(convId == "")
+	{
+		convId = ifnull(p.get("entity_id"),"").toString();
+	}
+	if(convId == "")
+	{
+		convId = ifnull(ent.get("id"),"").toString();
+	}
+	trBy = "";
+	tr = ent.get("transfer");
+	if(tr != null)
+	{
+		trBy = ifnull(tr.get("transferrer_type"),"").toString();
+		tb = tr.get("transferred_by");
+		if(trBy == "" && tb != null)
+		{
+			trBy = ifnull(tb.get("type"),"").toString();
+		}
+	}
+	res.put("conversation_id",convId);
+	res.put("transferrer_type",trBy);
+	if(convId == "")
+	{
+		res.put("status","no conversation id");
+		return res;
+	}
+	if(trBy != "" && trBy != "bot")
+	{
+		res.put("status","skipped: transfer not made by the bot");
+		return res;
+	}
+	r = invokeurl
+	[
+		url :crmFn + "&conv_id=" + convId
+		type :GET
+	];
+	res.put("crm_response",r);
+	out = "";
+	if(r.get("details") != null)
+	{
+		out = ifnull(r.get("details").get("output"),"").toString();
+	}
+	res.put("status",out);
+	return res;
+}

@@ -1,0 +1,85 @@
+void automation.detect_duplicate_lead(String leadid)
+{
+// v2 13 Oct 2026: paid leads (Lead Source "Advt - ...") keep their assigned owner when a duplicate is found; they are only flagged and noted. Other leads still move to the admin account.
+leadinfo = zoho.crm.getRecordById("Leads",leadid.tolong());
+email = ifnull(leadinfo.get("Email"),"");
+phone = ifnull(leadinfo.get("Phone"),"");
+src = ifnull(leadinfo.get("Lead_Source"),"").toString();
+isPaid = src.startsWith("Advt - ");
+dupcond = "";
+if(email != "")
+{
+	dupcond = dupcond + "Email = '" + email + "'";
+}
+if(phone != "")
+{
+	if(dupcond != "")
+	{
+		dupcond = dupcond + " or ";
+	}
+	dupcond = dupcond + "Phone = '" + phone + "'";
+}
+dupurls = "";
+dupfound = false;
+if(dupcond != "")
+{
+	lq = {"select_query":"select id from Leads where ((" + dupcond + ") and id != " + leadid + ") limit 50"};
+	lr = invokeurl
+	[
+		url :"https://www.zohoapis.com/crm/v3/coql"
+		type :POST
+		parameters:lq + ""
+		connection:"contact_to_lead"
+	];
+	ldata = ifnull(lr.get("data"),List());
+	for each  ld in ldata
+	{
+		dupurls = dupurls + "Leads: https://crm.zoho.com/crm/setindiabiz/tab/Leads/" + ld.get("id") + "\n";
+		dupfound = true;
+	}
+	cq = {"select_query":"select id from Contacts where (" + dupcond + ") limit 50"};
+	cr = invokeurl
+	[
+		url :"https://www.zohoapis.com/crm/v3/coql"
+		type :POST
+		parameters:cq + ""
+		connection:"contact_to_lead"
+	];
+	cdata = ifnull(cr.get("data"),List());
+	for each  cd in cdata
+	{
+		dupurls = dupurls + "Contacts: https://crm.zoho.com/crm/setindiabiz/tab/Contacts/" + cd.get("id") + "\n";
+		dupfound = true;
+	}
+}
+info dupurls;
+if(dupfound == true)
+{
+	dupmap = Map();
+	dupmap.put("Duplicate_Status","Yes");
+	if(isPaid == false)
+	{
+		dupmap.put("Owner","1123581000006825001");
+	}
+	updup = zoho.crm.updateRecord("Leads",leadid.tolong(),dupmap);
+	info updup;
+	noteText = "This lead matches existing record(s). Please verify and merge:\n" + dupurls;
+	if(isPaid == true)
+	{
+		noteText = "Paid lead (" + src + "): kept with its assigned owner. It matches existing record(s) below. Check with the owner of those records before calling. If you merge, keep THIS lead as the master so the ad source stays:\n" + dupurls;
+	}
+	dnote = Map();
+	dnote.put("Parent_Id",leadid);
+	dnote.put("se_module","Leads");
+	dnote.put("Note_Title","Duplicate Record(s) Found");
+	dnote.put("Note_Content",noteText);
+	dncreate = zoho.crm.createRecord("Notes",dnote);
+	info dncreate;
+}
+else
+{
+	nodup = Map();
+	nodup.put("Duplicate_Status","No");
+	zoho.crm.updateRecord("Leads",leadid.tolong(),nodup);
+}
+}

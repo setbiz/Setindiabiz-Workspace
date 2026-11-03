@@ -36,5 +36,7 @@ e.g. `GADS_Search_PvtLtdReg_PanIndia_Intent_202611`, `META_Leads_GSTReg_Delhi_LA
 Planning and review follow the Elephant-Goldfish Model. See `docs/egm-operating-plan.md`.
 EGM artifact directory: PPC/egm/runs/<YYYY-MM-DD>-<slug>
 
+Other live monitors on the owner's Claude account (see `imports/claude/INDEX.md`): the daily Meta lead-quality watch (Cowork, 09:40 IST), a weekly paid-channel report (Mon 09:00 IST) and the monthly LeadChain reconciliation. Before proposing a Meta change, read the latest `meta/history/cowork-meta-ads-project/Lead_Quality_Watch_Log_*.md` and this repo's `meta/changelog.md`.
+
 ## Open items
 See `docs/migration-checklist.md` for moving in past Cowork and ChatGPT work.

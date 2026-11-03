@@ -1,0 +1,15 @@
+acc = zoho.crm.getRecordById("Accounts", accId.toLong());
+upd = Map();
+if(acc.get("First_Touch_Date") == null)
+{
+    upd.put("First_Touch_Date", zoho.currentdate);
+}
+src = ifnull(acc.get("First_Touch_Lead_Source"), "");
+if(src.startsWith("PPC Meta") || src.startsWith("PPC Insta"))
+{
+    upd.put("Meta_Sourced", true);
+}
+if(upd.isEmpty() == false)
+{
+    updResp = zoho.crm.updateRecord("Accounts", accId.toLong(), upd);
+}

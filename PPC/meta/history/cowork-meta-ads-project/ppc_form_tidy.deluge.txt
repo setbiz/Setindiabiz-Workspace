@@ -1,0 +1,127 @@
+// ppc_form_tidy - v1 DEPLOYED 10 Oct 2026 ~12:35 IST (C72-C73). Replaces sib04_form_tidy (v2), now unattached.
+// Sanjeev, 12:19: "one function should handle all of these product and product cat"; Product Cat must come
+//   from the Products module, never typed into the function. Approved 12:24 ("ok").
+// Function "PPC Form Tidy", API name ppc_form_tidy, Deluge record id 1123581000946601707, category automation.
+//   Commit message "v1: one function for all Meta lead forms; Product Cat/Report Cat from Products record (Claude, 10 Oct)".
+// Signature: void automation.ppc_form_tidy(int leadId)   argument leadId = Leads > Lead Id
+// Trigger: rule 1123581000946541013, renamed "PPC Form Tidy"; Leads, Record action = CREATE;
+//   condition Meta Lead Form IS NOT EMPTY; instant action = this function; scheduled action = this function
+//   2 minutes after Rule Trigger Time (the re-run lands after "2 Pull Product Info" has blanked Product Cat).
+// Verified: IDE run on Trademark V2 lead 1123581000940494254 -> "not in CONFIG, nothing done", no write.
+//   Test lead 6 (1123581000946429088): instant run set Product_Name + Report_Cat "Compliance"; scheduled run
+//   at +1 min 39 s set Product_Category "Annual Filing". Both values read from the Products record.
+// WhatsApp (CTWA) leads are not covered and need no cover: plug sib_wa_lead sets Product_Name at creation,
+//   so "2 Pull Product Info" fills Product Cat on its own.
+// v1.1 SAVED 10 Oct 2026 13:17 IST (C74): CONFIG block for "SIB-05 India Entry Form v1" added; logic unchanged.
+//   Subsidiary (Indian company) and Not sure yet -> FDI - Subsidiary Incorporation (Sanjeev, 13:14);
+//   Branch office -> Branch Office Registration of Foreign Company; Liaison office -> FDI - Liaison Office.
+//   Not yet exercised: no SIB-05 form or lead exists until G7-G9.
+// To add a campaign form: add one CONFIG block (form name exactly as LeadChain writes Meta_Lead_Form,
+//   default product id, first-question options, optional answer -> product id). Nothing else changes.
+//
+// Body (between the braces of the function):
+
+// PPC Form Tidy - one function for every Meta lead form listed in CONFIG. Forms not listed are left alone.
+// 1. Description: LeadChain joins the form answers with no separator; insert ", " after the first answer.
+// 2. Product Name, only if blank: the product for the first answer, else the form's default product.
+// 3. Product Cat and Report Cat, each only if blank: copied from that Products record.
+// Updates fire no workflow. Safe to run twice (instant + scheduled).
+rec = zoho.crm.getRecordById("Leads",leadId.toLong());
+form = ifnull(rec.get("Meta_Lead_Form"),"").trim();
+// ===== CONFIG: one block per lead form =====
+cfg = Map();
+// SIB-04 Annual Filings - form "SIB-04 ACR Form v1" (2635626386872789)
+c = Map();
+c.put("product","1123581000000185017");
+// ACR - Company Annual Return
+q1 = {"One Person Company (OPC)","Private Limited","LLP"};
+c.put("q1",q1);
+byAnswer = Map();
+byAnswer.put("LLP","1123581000080093673");
+// LLP Annual Return (ACR)
+c.put("byAnswer",byAnswer);
+cfg.put("SIB-04 ACR Form v1",c);
+// SIB-05 India Entry - form "SIB-05 India Entry Form v1" (added 10 Oct 2026)
+c = Map();
+c.put("product","1123581000000185013");
+// FDI - Subsidiary Incorporation (Subsidiary and Not sure yet)
+q1 = {"Subsidiary (Indian company)","Branch office","Liaison office","Not sure yet"};
+c.put("q1",q1);
+byAnswer = Map();
+byAnswer.put("Branch office","1123581000057725451");
+// Branch Office Registration of Foreign Company
+byAnswer.put("Liaison office","1123581000057725457");
+// FDI - Liaison Office
+c.put("byAnswer",byAnswer);
+cfg.put("SIB-05 India Entry Form v1",c);
+// ===== end CONFIG =====
+if(cfg.containsKey(form) == false)
+{
+	info "ppc_form_tidy " + leadId + ": form '" + form + "' not in CONFIG, nothing done";
+}
+else
+{
+	c = cfg.get(form);
+	desc = ifnull(rec.get("Description"),"").trim();
+	upd = Map();
+	answer = "";
+	opts = c.get("q1");
+	for each  o in opts
+	{
+		if(answer == "" && desc.startsWith(o))
+		{
+			answer = o;
+		}
+	}
+	if(answer != "")
+	{
+		rest = desc.subString(answer.length()).trim();
+		if(rest.startsWith(","))
+		{
+			rest = rest.subString(1).trim();
+		}
+		newDesc = answer + ", " + rest;
+		if(rest != "" && newDesc != desc)
+		{
+			upd.put("Description",newDesc);
+		}
+	}
+	pid = "";
+	if(rec.get("Product_Name") != null)
+	{
+		pid = rec.get("Product_Name").get("id");
+	}
+	else
+	{
+		pid = c.get("product");
+		ba = c.get("byAnswer");
+		if(answer != "" && ba.containsKey(answer))
+		{
+			pid = ba.get(answer);
+		}
+		upd.put("Product_Name",pid);
+	}
+	if(rec.get("Product_Category") == null || rec.get("Report_Cat") == null)
+	{
+		prod = zoho.crm.getRecordById("Products",pid.toLong());
+		if(rec.get("Product_Category") == null && prod.get("Product_Category") != null)
+		{
+			upd.put("Product_Category",prod.get("Product_Category"));
+		}
+		if(rec.get("Report_Cat") == null && prod.get("Report_Cat") != null)
+		{
+			upd.put("Report_Cat",prod.get("Report_Cat"));
+		}
+	}
+	if(upd.size() > 0)
+	{
+		opt = Map();
+		opt.put("trigger",List());
+		r = zoho.crm.updateRecord("Leads",leadId.toLong(),upd,opt);
+		info "ppc_form_tidy " + leadId + " (" + form + "): " + upd.keys() + " -> " + r;
+	}
+	else
+	{
+		info "ppc_form_tidy " + leadId + " (" + form + "): nothing to change";
+	}
+}

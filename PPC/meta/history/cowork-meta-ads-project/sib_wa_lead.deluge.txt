@@ -1,0 +1,356 @@
+// sib_wa_lead - C4, 7 Oct 2026. WhatsApp/CTWA chat -> one CRM record per phone. Reusable for every SIB campaign bot.
+// Inputs (String): name, phone, email, adcode, clid, campaign, productcat, tag, ruleid, answers, dryrun, productid
+//   productid = CRM Products id for Product_Name (SIB-04 company: 1123581000000185017 "ACR - Company Annual Return").
+//     Workflow "2 Pull Product Info" derives Product_Category and Reporting_Manager from Product_Name, so pass it.
+//   adcode  e.g. ACR-C2 (from the pre-filled message); blank = organic chat
+//   campaign e.g. "SIB-04 Annual Filings"; productcat e.g. "Annual Filing"; tag e.g. "FB-ACR"
+//   ruleid  = CRM assignment rule id for this campaign (SIB-04: 1123581000945354238)
+//   dryrun  = "yes" -> search and read only, no writes (for testing)
+// Outputs: matched (new / lead / contact / none), recordid, ownerid, owneremail, ownername, status
+// Connections: COQL search via sib_crm_cb (coql.READ); record reads via invokeurl GET on zohocrm1;
+//   writes via built-in zoho.crm.createRecord / updateRecord on zohocrm1 (raw POST bodies were rejected, 7 Oct).
+// 8 Oct 2026 (v2): CLAIM rule - SalesIQ's own CRM integration creates a "Self - Web Chat" lead seconds before this plug.
+//   If the matched Lead has Lead_Source "Self - Web Chat", no Meta_Ad_Code, an ad code is present, and it was created
+//   within the last hour, the plug treats it as this chat's new lead: sets the ad/product/tag fields and re-runs the
+//   campaign assignment rule (lar_id on update). Older leads keep the existing-lead rule (note only).
+// Rules (doc "SIB-04 CRM Changes", C4):
+//   Match on the last 10 digits: Contacts (Phone/Mobile) first, then open Leads (Phone/WhatsApp_Number).
+//   Existing Contact: no new lead; add a Note; return the Contact owner.
+//   Existing Lead: NEVER overwrite Lead_Source or Meta_* first-touch fields; fill WhatsApp fields only if blank; add a Note.
+//   New Lead: Lead_Source "Advt - WhatsApp" if an ad code is present, else "Social - WhatsApp"; Meta_Ad_Type WhatsApp;
+//   created with lar_id = ruleid so the campaign's PPC assignment rule picks the owner.
+inp = Map();
+keys = {"name","phone","email","adcode","clid","campaign","productcat","tag","ruleid","answers","dryrun","productid"};
+for each  k in keys
+{
+	v = "";
+	if(session.containKey(k) && session.get(k) != null)
+	{
+		v = ifnull(session.get(k).get("value"),"").trim();
+	}
+	inp.put(k,v);
+}
+res = {"matched":"none","recordid":"","ownerid":"","owneremail":"","ownername":"","status":""};
+dry = inp.get("dryrun").toLowerCase() == "yes";
+digits = inp.get("phone").replaceAll("[^0-9]","");
+last10 = if(digits.length() >= 10,digits.subString(digits.length() - 10),"");
+if(last10 == "")
+{
+	res.put("status","no phone");
+	return res;
+}
+phoneOut = if(digits.length() == 10,"+91" + digits,"+" + digits);
+adcode = inp.get("adcode").toUpperCase();
+email = inp.get("email").toLowerCase();
+if(email.contains("@") == false || email.contains("'"))
+{
+	email = "";
+}
+nowIst = zoho.currenttime.toString("yyyy-MM-dd'T'HH:mm:ss","Asia/Kolkata") + "+05:30";
+stamp = zoho.currenttime.toString("dd-MMM-yyyy HH:mm","Asia/Kolkata") + " IST";
+noteBody = "WhatsApp chat " + stamp;
+if(adcode != "")
+{
+	noteBody = noteBody + " | Ad code: " + adcode;
+}
+if(inp.get("campaign") != "")
+{
+	noteBody = noteBody + " | Campaign: " + inp.get("campaign");
+}
+if(inp.get("clid") != "")
+{
+	noteBody = noteBody + " | ctwa_clid: " + inp.get("clid");
+}
+if(inp.get("answers") != "")
+{
+	noteBody = noteBody + "\n" + inp.get("answers");
+}
+api = "https://www.zohoapis.com/crm/v6/";
+// ---- 1. Existing Contact? (client) ----
+qp = Map();
+qp.put("select_query","select id from Contacts where (Phone like '%" + last10 + "' or Mobile like '%" + last10 + "') limit 1");
+r = invokeurl
+[
+	url :api + "coql"
+	type :POST
+	parameters:qp.toString()
+	connection:"sib_crm_cb"
+];
+info "contacts: " + r;
+module = "";
+recId = "";
+if(r != null && r.get("data") != null && r.get("data").size() > 0)
+{
+	module = "Contacts";
+	recId = r.get("data").get(0).get("id");
+}
+else
+{
+	// ---- 2. Existing open Lead? (COQL does not return converted leads) ----
+	qp = Map();
+	qp.put("select_query","select id from Leads where (Phone like '%" + last10 + "' or WhatsApp_Number like '%" + last10 + "') order by Created_Time desc limit 1");
+	r = invokeurl
+	[
+		url :api + "coql"
+		type :POST
+		parameters:qp.toString()
+		connection:"sib_crm_cb"
+	];
+	info "leads: " + r;
+	if(r != null && r.get("data") != null && r.get("data").size() > 0)
+	{
+		module = "Leads";
+		recId = r.get("data").get(0).get("id");
+	}
+}
+if(module != "")
+{
+	g = invokeurl
+	[
+		url :api + module + "/" + recId
+		type :GET
+		connection:"zohocrm1"
+	];
+	rec = Map();
+	if(g != null && g.get("data") != null && g.get("data").size() > 0)
+	{
+		rec = g.get("data").get(0);
+	}
+	own = rec.get("Owner");
+	if(own != null)
+	{
+		res.put("ownerid",ifnull(own.get("id"),""));
+		res.put("ownername",ifnull(own.get("name"),""));
+		res.put("owneremail",ifnull(own.get("email"),""));
+	}
+	res.put("matched",if(module == "Contacts","contact","lead"));
+	res.put("recordid",recId);
+	// ---- v2: claim a lead that SalesIQ just created for this same chat ----
+	claim = false;
+	if(module == "Leads" && adcode != "" && ifnull(rec.get("Lead_Source"),"") == "Self - Web Chat" && ifnull(rec.get("Meta_Ad_Code"),"") == "")
+	{
+		createdStr = ifnull(rec.get("Created_Time"),"").toString();
+		if(createdStr.length() >= 19)
+		{
+			ct = createdStr.subString(0,19).toTime("yyyy-MM-dd'T'HH:mm:ss");
+			cutoff = zoho.currenttime.subHour(1).toString("yyyy-MM-dd'T'HH:mm:ss","Asia/Kolkata").toTime("yyyy-MM-dd'T'HH:mm:ss");
+			if(ct >= cutoff)
+			{
+				claim = true;
+			}
+		}
+	}
+	if(claim)
+	{
+		if(dry)
+		{
+			res.put("status","dryrun: would claim SalesIQ lead " + recId);
+			return res;
+		}
+		cl = Map();
+		cl.put("Lead_Source","Advt - WhatsApp");
+		cl.put("Lead_Channel","Advt");
+		cl.put("Meta_Ad_Type","WhatsApp");
+		cl.put("Meta_Ad_Code",adcode);
+		if(inp.get("campaign") != "")
+		{
+			cl.put("Meta_Campaign",inp.get("campaign"));
+		}
+		if(inp.get("clid") != "")
+		{
+			cl.put("CTWA_Click_ID",inp.get("clid"));
+		}
+		if(inp.get("productid") != "")
+		{
+			cl.put("Product_Name",inp.get("productid"));
+		}
+		if(inp.get("productcat") != "")
+		{
+			cl.put("Product_Category",inp.get("productcat"));
+		}
+		if(inp.get("tag") != "")
+		{
+			tm2 = Map();
+			tm2.put("name",inp.get("tag"));
+			tl2 = List();
+			tl2.add(tm2);
+			cl.put("Tag",tl2);
+		}
+		if(ifnull(rec.get("WhatsApp_Number"),"") == "")
+		{
+			cl.put("WhatsApp_Number",phoneOut);
+		}
+		cl.put("WhatsApp_Opt_In",true);
+		cl.put("Opt_In_Time",nowIst);
+		copt2 = Map();
+		if(inp.get("ruleid") != "")
+		{
+			copt2.put("lar_id",inp.get("ruleid"));
+		}
+		trg2 = List();
+		trg2.add("workflow");
+		copt2.put("trigger",trg2);
+		u2 = zoho.crm.updateRecord("Leads",recId.toLong(),cl,copt2,"zohocrm1");
+		info "claim update: " + u2;
+		nm2 = Map();
+		nm2.put("Note_Title","WhatsApp chat " + stamp);
+		nm2.put("Note_Content",noteBody);
+		nm2.put("Parent_Id",recId);
+		nm2.put("se_module","Leads");
+		n2 = zoho.crm.createRecord("Notes",nm2,Map(),"zohocrm1");
+		info "note: " + n2;
+		g2 = invokeurl
+		[
+			url :api + "Leads/" + recId
+			type :GET
+			connection:"zohocrm1"
+		];
+		if(g2 != null && g2.get("data") != null && g2.get("data").size() > 0)
+		{
+			own2 = g2.get("data").get(0).get("Owner");
+			if(own2 != null)
+			{
+				res.put("ownerid",ifnull(own2.get("id"),""));
+				res.put("ownername",ifnull(own2.get("name"),""));
+				res.put("owneremail",ifnull(own2.get("email"),""));
+			}
+		}
+		res.put("matched","new");
+		res.put("status","claimed SalesIQ lead");
+		return res;
+	}
+	if(dry)
+	{
+		res.put("status","dryrun: found " + module + " " + recId);
+		return res;
+	}
+	// Lead only: fill WhatsApp fields if blank. Never touch Lead_Source / Meta_* on an existing record.
+	if(module == "Leads")
+	{
+		upd = Map();
+		if(ifnull(rec.get("WhatsApp_Number"),"") == "")
+		{
+			upd.put("WhatsApp_Number",phoneOut);
+		}
+		if(rec.get("WhatsApp_Opt_In") != true)
+		{
+			upd.put("WhatsApp_Opt_In",true);
+			upd.put("Opt_In_Time",nowIst);
+		}
+		if(upd.size() > 0)
+		{
+			uopt = Map();
+			uopt.put("trigger",List());
+			u = zoho.crm.updateRecord("Leads",recId.toLong(),upd,uopt,"zohocrm1");
+			info "lead update: " + u;
+		}
+	}
+	nm = Map();
+	nm.put("Note_Title","WhatsApp chat " + stamp);
+	nm.put("Note_Content",noteBody);
+	nm.put("Parent_Id",recId);
+	nm.put("se_module",module);
+	n = zoho.crm.createRecord("Notes",nm,Map(),"zohocrm1");
+	info "note: " + n;
+	res.put("status","updated existing " + module);
+	return res;
+}
+// ---- 3. New Lead ----
+if(dry)
+{
+	res.put("status","dryrun: no match, would create a new Lead");
+	return res;
+}
+lead = Map();
+lname = inp.get("name");
+if(lname == "")
+{
+	lname = "WhatsApp " + last10;
+}
+lead.put("Last_Name",lname);
+lead.put("Phone",phoneOut);
+lead.put("WhatsApp_Number",phoneOut);
+if(email != "")
+{
+	lead.put("Email",email);
+}
+if(adcode != "")
+{
+	lead.put("Lead_Source","Advt - WhatsApp");
+	lead.put("Lead_Channel","Advt");
+	lead.put("Meta_Ad_Type","WhatsApp");
+	lead.put("Meta_Ad_Code",adcode);
+	if(inp.get("campaign") != "")
+	{
+		lead.put("Meta_Campaign",inp.get("campaign"));
+	}
+	if(inp.get("clid") != "")
+	{
+		lead.put("CTWA_Click_ID",inp.get("clid"));
+	}
+}
+else
+{
+	lead.put("Lead_Source","Social - WhatsApp");
+	lead.put("Lead_Channel","Social");
+}
+if(inp.get("productid") != "")
+{
+	lead.put("Product_Name",inp.get("productid"));
+}
+if(inp.get("productcat") != "")
+{
+	lead.put("Product_Category",inp.get("productcat"));
+}
+if(inp.get("tag") != "")
+{
+	tm = Map();
+	tm.put("name",inp.get("tag"));
+	tl = List();
+	tl.add(tm);
+	lead.put("Tag",tl);
+}
+lead.put("WhatsApp_Opt_In",true);
+lead.put("Opt_In_Time",nowIst);
+lead.put("Description",noteBody);
+copt = Map();
+if(inp.get("ruleid") != "")
+{
+	copt.put("lar_id",inp.get("ruleid"));
+}
+trg = List();
+trg.add("workflow");
+trg.add("blueprint");
+copt.put("trigger",trg);
+c = zoho.crm.createRecord("Leads",lead,copt,"zohocrm1");
+info "create: " + c;
+newId = "";
+if(c != null && c.get("id") != null)
+{
+	newId = c.get("id").toString();
+}
+else
+{
+	res.put("status","create failed - see plug logs");
+	return res;
+}
+res.put("matched","new");
+res.put("recordid",newId);
+g = invokeurl
+[
+	url :api + "Leads/" + newId
+	type :GET
+	connection:"zohocrm1"
+];
+if(g != null && g.get("data") != null && g.get("data").size() > 0)
+{
+	own = g.get("data").get(0).get("Owner");
+	if(own != null)
+	{
+		res.put("ownerid",ifnull(own.get("id"),""));
+		res.put("ownername",ifnull(own.get("name"),""));
+		res.put("owneremail",ifnull(own.get("email"),""));
+	}
+}
+res.put("status","created Lead");
+return res;

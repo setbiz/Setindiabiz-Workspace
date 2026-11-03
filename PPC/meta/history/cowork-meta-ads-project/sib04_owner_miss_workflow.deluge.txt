@@ -1,0 +1,93 @@
+// SIB-04 owner-miss fallback - SalesIQ Data Workflow "SIB-04 owner miss - to Customer Support" (8 Oct 2026, Sanjeev).
+// Brand Compliance & ACR. Events: conversation.transfer.rejected (owner declined / ignored the bot hand-off)
+// and conversation.missed (status "Bot Transfer Missed"). Moves the chat to Customer Support (dept 61466000018349043)
+// through connection sib_siq (SalesIQ.conversations.READ + UPDATE). Operator-to-operator transfers are left alone.
+data = entity;
+if(data.containKey("entity_data"))
+{
+	data = data.get("entity_data");
+}
+csDept = "61466000018349043";
+api = "https://salesiq.zoho.com/api/v2/wwwsetindiabizcom/conversations/";
+convId = ifnull(data.get("conversation_id"),"").toString();
+if(convId == "")
+{
+	convId = ifnull(data.get("id"),"").toString();
+}
+if(convId == "")
+{
+	convId = ifnull(entity_id,"").toString();
+}
+status = ifnull(data.get("status"),"").toString();
+byBot = false;
+tr = data.get("transfer");
+if(tr != null)
+{
+	if(ifnull(tr.get("transferrer_type"),"").toString() == "bot")
+	{
+		byBot = true;
+	}
+	tb = tr.get("transferred_by");
+	if(tb != null)
+	{
+		if(ifnull(tb.get("type"),"").toString() == "bot")
+		{
+			byBot = true;
+		}
+	}
+}
+go = false;
+if(event == "conversation.missed" && status == "Bot Transfer Missed")
+{
+	go = true;
+}
+if(event == "conversation.transfer.rejected" && byBot)
+{
+	go = true;
+}
+info event + " conv " + convId + " status " + status + " byBot " + byBot + " go " + go;
+if(go && convId != "")
+{
+	// read the chat: skip if a human already has it or it is already in Customer Support
+	g = invokeurl
+	[
+		url :api + convId
+		type :GET
+		connection:"sib_siq"
+	];
+	d = g.get("data");
+	human = false;
+	deptNow = "";
+	if(d != null)
+	{
+		att = d.get("attender");
+		if(att != null && att.get("id") != null && ifnull(att.get("is_bot"),"").toString() != "true")
+		{
+			human = true;
+		}
+		dp = d.get("department");
+		if(dp != null)
+		{
+			deptNow = ifnull(dp.get("id"),"").toString();
+		}
+	}
+	info "human " + human + " dept " + deptNow;
+	if(human == false && deptNow != csDept)
+	{
+		body = Map();
+		body.put("department_id",csDept);
+		body.put("note","Owner did not pick the chat - SIB-04 auto-fallback to Customer Support");
+		hdr = Map();
+		hdr.put("Content-Type","application/json");
+		r = invokeurl
+		[
+			url :api + convId + "/transfer"
+			type :PUT
+			parameters:body.toString()
+			headers:hdr
+			connection:"sib_siq"
+		];
+		info "transfer: " + r;
+	}
+}
+return Map();

@@ -1,0 +1,105 @@
+void schedule.sib_capisweep()
+{
+datasetId = "1242417817083521";
+apiVersion = "v21.0";
+accessToken = zoho.crm.getOrgVariable("meta_capi_access_token");
+validSet = {"Valid - RM Working","Valid - NIL RM Action","Valid - Casual RM Action","Valid - Good RM Action"};
+progressSet = {"Negotiation","Proposal Sent","Payment Pending"};
+srcSet = {"Advt - Facebook","Advt - Instagram"};
+qp = Map();
+qp.put("sort_by","Modified_Time");
+qp.put("sort_order","desc");
+leads = zoho.crm.getRecords("Leads",1,100,qp);
+info "CAPI sweep: scanning " + leads.size() + " recently-modified leads";
+dataList = List();
+sentIds = List();
+for each  rec in leads
+{
+	src = ifnull(rec.get("Lead_Source"),"").toString();
+	alreadySent = ifnull(rec.get("Meta_CAPI_Sent"),false);
+	if(srcSet.contains(src) && alreadySent == false && dataList.size() < 20)
+	{
+		rmq = ifnull(rec.get("RM_Lead_Quality"),"").toString();
+		tlq = ifnull(rec.get("Mkt_Leat_Quality"),"").toString();
+		csdq = ifnull(rec.get("CSD_Lead_Quality"),"").toString();
+		status = ifnull(rec.get("Lead_Status"),"").toString();
+		eventName = "";
+		if(progressSet.contains(status))
+		{
+			eventName = "QualifiedLead";
+		}
+		else if(validSet.contains(rmq) || validSet.contains(tlq) || validSet.contains(csdq) || status == "Valid Lead")
+		{
+			eventName = "ValidLead";
+		}
+		if(eventName != "")
+		{
+			userData = Map();
+			leadId = ifnull(rec.get("leadchain0__Social_Lead_ID"),"").toString();
+			if(leadId != "")
+			{
+				userData.put("lead_id",leadId);
+			}
+			email = ifnull(rec.get("Email"),"").toString();
+			if(email != "")
+			{
+				userData.put("em",zoho.encryption.sha256(email.toLowerCase().trim()));
+			}
+			phone = ifnull(rec.get("Phone"),"").toString();
+			if(phone == "")
+			{
+				phone = ifnull(rec.get("Mobile"),"").toString();
+			}
+			if(phone != "")
+			{
+				phNorm = phone.replaceAll("[^0-9]","");
+				if(phNorm.length() == 10)
+				{
+					phNorm = "91" + phNorm;
+				}
+				userData.put("ph",zoho.encryption.sha256(phNorm));
+			}
+			if(userData.size() > 0)
+			{
+				event = Map();
+				event.put("event_name",eventName);
+				event.put("event_time",zoho.currenttime.toString().unixEpoch() / 1000);
+				event.put("action_source","system_generated");
+				event.put("event_id",rec.get("id").toString() + "-" + eventName);
+				event.put("user_data",userData);
+				dataList.add(event);
+				sentIds.add(rec.get("id"));
+			}
+		}
+	}
+}
+info "CAPI sweep: " + dataList.size() + " events to send";
+if(dataList.size() > 0)
+{
+	payload = Map();
+	payload.put("data",dataList);
+	endpoint = "https://graph.facebook.com/" + apiVersion + "/" + datasetId + "/events?access_token=" + accessToken;
+	response = invokeurl
+	[
+		url :endpoint
+		type :POST
+		parameters:payload.toString()
+		content-type:"application/json"
+	];
+	info "CAPI sweep -> " + response;
+	received = ifnull(response.get("events_received"),0);
+	if(received > 0)
+	{
+		noTrig = Map();
+		emptyList = List();
+		noTrig.put("trigger",emptyList);
+		sentMap = Map();
+		sentMap.put("Meta_CAPI_Sent",true);
+		for each  sid in sentIds
+		{
+			upd = zoho.crm.updateRecord("Leads",sid,sentMap,noTrig);
+		}
+		info "CAPI sweep: marked " + sentIds.size() + " leads as sent";
+	}
+}
+}

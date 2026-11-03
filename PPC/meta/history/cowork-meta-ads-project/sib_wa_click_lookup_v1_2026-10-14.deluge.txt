@@ -1,0 +1,35 @@
+string standalone.sib_wa_click_lookup(String phone)
+{
+// v1 14 Oct 2026. Used by sib_sendMetaCAPI / sib_sendMetaCAPI1 / sib_capisweep.
+// Returns (as a JSON string) the most recent WhatsApp ad click for this phone (last 10 digits) made in the last 7 days,
+// Meta's attribution window for click-to-WhatsApp events: {"ctwa_clid","waba_id","ad_id","click_epoch","click_record"}.
+// Returns "{}" when there is none, so the caller sends its normal system_generated event.
+out = Map();
+digits = ifnull(phone,"").toString().replaceAll("[^0-9]","");
+if(digits.length() < 10)
+{
+	return out.toString();
+}
+last10 = digits.subString(digits.length() - 10);
+rows = zoho.crm.searchRecords("WA_Ad_Clicks","(Phone_Last10:equals:" + last10 + ")");
+nowEpoch = zoho.currenttime.toString().unixEpoch() / 1000;
+best = 0;
+for each  c in rows
+{
+	ep = ifnull(c.get("Click_Epoch"),"").toString();
+	if(ep.isNumber())
+	{
+		epl = ep.toLong();
+		if(nowEpoch - epl <= 604800 && epl > best)
+		{
+			best = epl;
+			out.put("ctwa_clid",c.get("Click_ID"));
+			out.put("waba_id",c.get("WABA_ID"));
+			out.put("ad_id",c.get("Ad_ID"));
+			out.put("click_epoch",epl);
+			out.put("click_record",c.get("id"));
+		}
+	}
+}
+return out.toString();
+}

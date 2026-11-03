@@ -1,0 +1,157 @@
+// ppc_form_tidy - v1.2 DEPLOYED 15 Oct 2026 17:10:58 IST (approved by Sanjeev 17:07, Section 8 -> Sec 8 Pvt Guarantee).
+//   Live code checked first: identical to v1.1 (IDE shows the signature as Int, API as BIGINT). Saved via IDE setValue + Save,
+//   read back by API: stored script equals editor. Backfill: lead 1123581000948436150 (Mukesh Vyas, 'Need Help to Decide?')
+//   set by connector to Incorporation - Pvt Ltd / Start Company / Startup (trigger []), the same values the function gives.
+// Earlier note: Adds CONFIG blocks for "Incorporation V2" (#IND1) and
+//   "Trademark V2" (SIB-02). Logic unchanged from v1.1; only the CONFIG section grows.
+//   Why: relaunch form leads arrive with Product Name and Product Cat blank (LeadChain chains set no product);
+//   RMs fill them by hand, sometimes 10-40 min later, sometimes never (lead 1123581000948436150).
+//   Answer values taken from 200 Incorporation V2 / Trademark V2 leads since 1 Sep 2026 (exact spellings).
+// v1 DEPLOYED 10 Oct 2026 ~12:35 IST (C72-C73). Replaces sib04_form_tidy (v2), now unattached.
+// Sanjeev, 12:19: "one function should handle all of these product and product cat"; Product Cat must come
+//   from the Products module, never typed into the function. Approved 12:24 ("ok").
+// Function "PPC Form Tidy", API name ppc_form_tidy, Deluge record id 1123581000946601707, category automation.
+// Signature: void automation.ppc_form_tidy(int leadId)   argument leadId = Leads > Lead Id
+// Trigger: rule 1123581000946541013, renamed "PPC Form Tidy"; Leads, Record action = CREATE;
+//   condition Meta Lead Form IS NOT EMPTY; instant action = this function; scheduled action = this function
+//   2 minutes after Rule Trigger Time (the re-run lands after "2 Pull Product Info" has blanked Product Cat).
+// v1.1 SAVED 10 Oct 2026 13:17 IST (C74): CONFIG block for "SIB-05 India Entry Form v1" added; logic unchanged.
+// To add a campaign form: add one CONFIG block (form name exactly as LeadChain writes Meta_Lead_Form,
+//   default product id, first-question options, optional answer -> product id). Nothing else changes.
+//
+// Body (between the braces of the function):
+
+// PPC Form Tidy - one function for every Meta lead form listed in CONFIG. Forms not listed are left alone.
+// 1. Description: LeadChain joins the form answers with no separator; insert ", " after the first answer.
+// 2. Product Name, only if blank: the product for the first answer, else the form's default product.
+// 3. Product Cat and Report Cat, each only if blank: copied from that Products record.
+// Updates fire no workflow. Safe to run twice (instant + scheduled).
+rec = zoho.crm.getRecordById("Leads",leadId.toLong());
+form = ifnull(rec.get("Meta_Lead_Form"),"").trim();
+// ===== CONFIG: one block per lead form =====
+cfg = Map();
+// SIB-04 Annual Filings - form "SIB-04 ACR Form v1" (2635626386872789)
+c = Map();
+c.put("product","1123581000000185017");
+// ACR - Company Annual Return
+q1 = {"One Person Company (OPC)","Private Limited","LLP"};
+c.put("q1",q1);
+byAnswer = Map();
+byAnswer.put("LLP","1123581000080093673");
+// LLP Annual Return (ACR)
+c.put("byAnswer",byAnswer);
+cfg.put("SIB-04 ACR Form v1",c);
+// SIB-05 India Entry - form "SIB-05 India Entry Form v1" (added 10 Oct 2026)
+c = Map();
+c.put("product","1123581000000185013");
+// FDI - Subsidiary Incorporation (Subsidiary and Not sure yet)
+q1 = {"Subsidiary (Indian company)","Branch office","Liaison office","Not sure yet"};
+c.put("q1",q1);
+byAnswer = Map();
+byAnswer.put("Branch office","1123581000057725451");
+// Branch Office Registration of Foreign Company
+byAnswer.put("Liaison office","1123581000057725457");
+// FDI - Liaison Office
+c.put("byAnswer",byAnswer);
+cfg.put("SIB-05 India Entry Form v1",c);
+// Incorporation V2 - #IND1 Incorporation (added 15 Oct 2026, v1.2)
+c = Map();
+c.put("product","1123581000069126115");
+// Incorporation - Pvt Ltd (Company Registration and Need Help to Decide?)
+q1 = {"Company Registration","LLP Registration","Partnership Firm","Section 8 Company","Need Help to Decide?"};
+c.put("q1",q1);
+byAnswer = Map();
+byAnswer.put("LLP Registration","1123581000057725464");
+// LLP Registration
+byAnswer.put("Partnership Firm","1123581000467275187");
+// Partnership - ROF Registration
+byAnswer.put("Section 8 Company","1123581000788931628");
+// Incorporation of Sec 8 Pvt Guarantee (Sanjeev, 15 Oct 17:07)
+c.put("byAnswer",byAnswer);
+cfg.put("Incorporation V2",c);
+// Trademark V2 - SIB-02 Trademark (added 15 Oct 2026, v1.2)
+c = Map();
+c.put("product","1123581000103801012");
+// TMF - Standard TM Filing (Trademark Registration and Something Else)
+q1 = {"Trademark Registration","Trademark Renewal","Trademark Filed - Objection Removal","Trademark Legal Support","Something Else"};
+c.put("q1",q1);
+byAnswer = Map();
+byAnswer.put("Trademark Renewal","1123581000057725192");
+// TM - Trademark Renewal India
+byAnswer.put("Trademark Filed - Objection Removal","1123581000141956051");
+// TM - Reply to Exam Report
+byAnswer.put("Trademark Legal Support","1123581000269973175");
+// Consultation for Trademark
+c.put("byAnswer",byAnswer);
+cfg.put("Trademark V2",c);
+// ===== end CONFIG =====
+if(cfg.containsKey(form) == false)
+{
+	info "ppc_form_tidy " + leadId + ": form '" + form + "' not in CONFIG, nothing done";
+}
+else
+{
+	c = cfg.get(form);
+	desc = ifnull(rec.get("Description"),"").trim();
+	upd = Map();
+	answer = "";
+	opts = c.get("q1");
+	for each  o in opts
+	{
+		if(answer == "" && desc.startsWith(o))
+		{
+			answer = o;
+		}
+	}
+	if(answer != "")
+	{
+		rest = desc.subString(answer.length()).trim();
+		if(rest.startsWith(","))
+		{
+			rest = rest.subString(1).trim();
+		}
+		newDesc = answer + ", " + rest;
+		if(rest != "" && newDesc != desc)
+		{
+			upd.put("Description",newDesc);
+		}
+	}
+	pid = "";
+	if(rec.get("Product_Name") != null)
+	{
+		pid = rec.get("Product_Name").get("id");
+	}
+	else
+	{
+		pid = c.get("product");
+		ba = c.get("byAnswer");
+		if(answer != "" && ba.containsKey(answer))
+		{
+			pid = ba.get(answer);
+		}
+		upd.put("Product_Name",pid);
+	}
+	if(rec.get("Product_Category") == null || rec.get("Report_Cat") == null)
+	{
+		prod = zoho.crm.getRecordById("Products",pid.toLong());
+		if(rec.get("Product_Category") == null && prod.get("Product_Category") != null)
+		{
+			upd.put("Product_Category",prod.get("Product_Category"));
+		}
+		if(rec.get("Report_Cat") == null && prod.get("Report_Cat") != null)
+		{
+			upd.put("Report_Cat",prod.get("Report_Cat"));
+		}
+	}
+	if(upd.size() > 0)
+	{
+		opt = Map();
+		opt.put("trigger",List());
+		r = zoho.crm.updateRecord("Leads",leadId.toLong(),upd,opt);
+		info "ppc_form_tidy " + leadId + " (" + form + "): " + upd.keys() + " -> " + r;
+	}
+	else
+	{
+		info "ppc_form_tidy " + leadId + " (" + form + "): nothing to change";
+	}
+}

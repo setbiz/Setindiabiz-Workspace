@@ -1,0 +1,101 @@
+// sib04_chat_attended_by - 9 Oct 2026 (D2).
+// SalesIQ Data Workflow "SIB-04 chat attended - Chat_Attended_By" (61466000026803038).
+// Brand Compliance & ACR (app 61466000023310359). Module Conversation.
+// Events: conversation.attender.updated AND conversation.transfer.accepted (no rule).
+//   - the picker has no "conversation.attended"; attender.updated = "an operator has accepted a chat or it
+//     has been transferred". The bot attends first and forwards to the LG-11 owner; either event may fire.
+// What it does:
+//   1. Reads the chat through connection sib_siq (SalesIQ.conversations.READ), as sib04_owner_miss_workflow does.
+//   2. Skips bot attenders (Tiya).
+//   3. Finds the newest open CRM Lead by the visitor's last-10 phone digits (Phone or WhatsApp_Number) via COQL on sib_crm_cb.
+//   4. Writes the operator's email to Leads.Chat_Attended_By ONLY if it is empty (first human attender wins).
+//      Update runs with trigger [] so no CRM workflow/blueprint rules fire.
+//   Never creates a lead (the plug and SalesIQ's native CRM push own lead creation). Existing Contacts are skipped
+//   (Chat_Attended_By exists on Leads only).
+// Keys data.attender.email / .is_bot and data.visitor.phone confirmed 9 Oct 2026 against Zoho's API doc
+// "Get Details of a Particular Conversation" (SalesIQ REST API v2). Deployed 9 Oct 2026 on Sanjeev's go (D2).
+data = entity;
+if(data.containKey("entity_data"))
+{
+	data = data.get("entity_data");
+}
+api = "https://salesiq.zoho.com/api/v2/wwwsetindiabizcom/conversations/";
+convId = ifnull(data.get("conversation_id"),"").toString();
+if(convId == "")
+{
+	convId = ifnull(data.get("id"),"").toString();
+}
+if(convId == "")
+{
+	convId = ifnull(entity_id,"").toString();
+}
+info event + " conv " + convId;
+if(convId == "")
+{
+	return Map();
+}
+g = invokeurl
+[
+	url :api + convId
+	type :GET
+	connection:"sib_siq"
+];
+d = g.get("data");
+if(d == null)
+{
+	info "no conversation data: " + g;
+	return Map();
+}
+att = d.get("attender");
+info "attender: " + att;
+if(att == null || ifnull(att.get("is_bot"),"").toString() == "true")
+{
+	info "attender is bot or empty - skip";
+	return Map();
+}
+opEmail = ifnull(att.get("email"),"").toString().toLowerCase();
+if(opEmail.contains("@") == false)
+{
+	info "no operator email - skip";
+	return Map();
+}
+phone = "";
+vis = d.get("visitor");
+if(vis != null)
+{
+	phone = ifnull(vis.get("phone"),"").toString();
+}
+digits = phone.replaceAll("[^0-9]","");
+if(digits.length() < 10)
+{
+	info "no visitor phone - skip";
+	return Map();
+}
+last10 = digits.subString(digits.length() - 10);
+qp = Map();
+qp.put("select_query","select id, Chat_Attended_By from Leads where (Phone like '%" + last10 + "' or WhatsApp_Number like '%" + last10 + "') order by Created_Time desc limit 1");
+r = invokeurl
+[
+	url :"https://www.zohoapis.com/crm/v6/coql"
+	type :POST
+	parameters:qp.toString()
+	connection:"sib_crm_cb"
+];
+if(r == null || r.get("data") == null || r.get("data").size() == 0)
+{
+	info "no open lead for " + last10 + " - skip";
+	return Map();
+}
+lead = r.get("data").get(0);
+if(ifnull(lead.get("Chat_Attended_By"),"").toString() != "")
+{
+	info "Chat_Attended_By already set: " + lead.get("Chat_Attended_By");
+	return Map();
+}
+upd = Map();
+upd.put("Chat_Attended_By",opEmail);
+opt = Map();
+opt.put("trigger",List());
+u = zoho.crm.updateRecord("Leads",lead.get("id").toLong(),upd,opt,"sib_crm_cb");
+info "update lead " + lead.get("id") + ": " + u;
+return Map();

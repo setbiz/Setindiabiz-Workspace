@@ -1,0 +1,71 @@
+string standalone.sib_wa_setup(String action)
+{
+// v1 14 Oct 2026. One-off setup and checks for WhatsApp click capture. Run from the IDE (Run, action = ...).
+// Reads the system-user token from org variable meta_wa_access_token; never prints it.
+//   check     = read only: token's app and permissions (debug_token), apps subscribed to the WABA, the WABA's dataset
+//   subscribe = POST /{WABA}/subscribed_apps: subscribes the token's app (Setindiabiz WA Signals) to the WABA.
+//               SalesIQ's subscription is not touched; "check" afterwards should list both apps.
+//   dataset   = POST /{WABA}/dataset: returns the dataset linked to the WABA (creates one only if none exists)
+waba = "2287130705376253";
+base = "https://graph.facebook.com/v21.0/";
+tok = ifnull(zoho.crm.getOrgVariable("meta_wa_access_token"),"").toString();
+if(tok.length() < 50)
+{
+	return "meta_wa_access_token is empty";
+}
+out = Map();
+if(action == "check")
+{
+	dbg = invokeurl
+	[
+		url :base + "debug_token?input_token=" + tok + "&access_token=" + tok
+		type :GET
+	];
+	d = ifnull(dbg.get("data"),Map());
+	slim = Map();
+	slim.put("app_id",d.get("app_id"));
+	slim.put("application",d.get("application"));
+	slim.put("type",d.get("type"));
+	slim.put("is_valid",d.get("is_valid"));
+	slim.put("expires_at",d.get("expires_at"));
+	slim.put("scopes",d.get("scopes"));
+	slim.put("granular_scopes",d.get("granular_scopes"));
+	out.put("token",slim);
+	subs = invokeurl
+	[
+		url :base + waba + "/subscribed_apps?access_token=" + tok
+		type :GET
+	];
+	out.put("subscribed_apps",subs);
+	ds = invokeurl
+	[
+		url :base + waba + "/dataset?access_token=" + tok
+		type :GET
+	];
+	out.put("dataset",ds);
+}
+else if(action == "subscribe")
+{
+	s = invokeurl
+	[
+		url :base + waba + "/subscribed_apps?access_token=" + tok
+		type :POST
+	];
+	out.put("subscribe",s);
+}
+else if(action == "dataset")
+{
+	p = invokeurl
+	[
+		url :base + waba + "/dataset?access_token=" + tok
+		type :POST
+	];
+	out.put("dataset",p);
+}
+else
+{
+	return "action must be check, subscribe or dataset";
+}
+info out;
+return out.toString();
+}

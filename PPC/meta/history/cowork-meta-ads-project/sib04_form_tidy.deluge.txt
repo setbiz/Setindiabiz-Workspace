@@ -1,0 +1,72 @@
+// sib04_form_tidy - v2 DEPLOYED 10 Oct 2026 ~11:10 IST (Sanjeev chose "Delayed re-run"). v1 deployed ~09:50 (C67-C68).
+// Function id 1123581000946541004, API name sib04_form_tidy. Signature: void automation.sib04_form_tidy(Int leadId)
+//   argument leadId = Leads > Lead Id.  Commit message: "v2: Product Cat only if blank, for scheduled re-run (Claude, 10 Oct)".
+// Workflow rule "SIB-04 Form Tidy" (1123581000946541013): Leads, Record action = CREATE only,
+//   condition Meta Lead Form is "SIB-04 ACR Form v1".
+//   Instant action   = this function.
+//   Scheduled action = this function, 2 minutes after Rule Trigger Time (added 10 Oct ~11:15, C71).
+//
+// Why: "2 Pull Product Info" runs side by side with the instant run at creation, reads the lead while Product Name is
+//   still blank and writes Product Cat = null last (test leads 3 and 4). Rule order does not help (test 4). LeadChain
+//   cannot set the Product Name lookup at creation (only form answers can be mapped to it). The 2-minute re-run lands
+//   after Pull Product and restores "Annual Filing" only if Product Cat is still blank, so it never overwrites an RM's
+//   category. Description and Product Name logic are safe to run twice.
+//
+// Exact body as deployed (between the braces of the function):
+
+// SIB-04 Form Tidy - 10 Oct 2026. Workflow "SIB-04 Form Tidy" (Leads, Create, Meta Lead Form is SIB-04 ACR Form v1).
+// 1. Description: LeadChain joins the two form answers with no separator; insert ", ".
+// 2. Product Name: "2 Pull Product Info" rebuilds Product Cat from Product Name and blanks it when Product Name is empty.
+//    LLP -> LLP Annual Return (ACR); anything else -> ACR - Company Annual Return. Only if blank.
+// No workflow re-trigger. Form Q1 options: Private Limited / One Person Company (OPC) / LLP.
+// v2 10 Oct 2026 ~11:10: Product Cat set ONLY IF BLANK, so the scheduled re-run (N min after create) never overwrites an RM's category.
+rec = zoho.crm.getRecordById("Leads",leadId.toLong());
+desc = ifnull(rec.get("Description"),"").trim();
+upd = Map();
+entity = "";
+entities = {"One Person Company (OPC)","Private Limited","LLP"};
+for each  e in entities
+{
+	if(entity == "" && desc.startsWith(e))
+	{
+		entity = e;
+	}
+}
+if(entity != "")
+{
+	rest = desc.subString(entity.length()).trim();
+	if(rest.startsWith(","))
+	{
+		rest = rest.subString(1).trim();
+	}
+	if(rest != "")
+	{
+		upd.put("Description",entity + ", " + rest);
+	}
+}
+if(rec.get("Product_Name") == null)
+{
+	if(entity == "LLP")
+	{
+		upd.put("Product_Name","1123581000080093673");
+	}
+	else
+	{
+		upd.put("Product_Name","1123581000000185017");
+	}
+}
+if(rec.get("Product_Category") == null)
+{
+	upd.put("Product_Category","Annual Filing");
+}
+if(upd.size() > 0)
+{
+	opt = Map();
+	opt.put("trigger",List());
+	r = zoho.crm.updateRecord("Leads",leadId.toLong(),upd,opt);
+	info "sib04_form_tidy " + leadId + ": " + r;
+}
+else
+{
+	info "sib04_form_tidy " + leadId + ": nothing to change";
+}

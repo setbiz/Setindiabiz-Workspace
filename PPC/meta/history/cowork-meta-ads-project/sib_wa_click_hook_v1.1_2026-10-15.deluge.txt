@@ -1,0 +1,204 @@
+string standalone.sib_wa_click_hook(map crmAPIRequest)
+{
+// v1.1 15 Oct 2026: signature diagnostics only (see the signature section); intake unchanged.
+// v1 14 Oct 2026. Webhook for the Meta app "Setindiabiz WA Signals" (WhatsApp, field "messages"),
+// subscribed to WABA 2287130705376253 "Setindiabiz - Salesiq" alongside SalesIQ's own app.
+// Exposed as a REST API function (API key). Meta calls it two ways:
+//   GET  = verification. Answers hub.challenge only when hub.verify_token equals org variable meta_wa_verify_token.
+//   POST = notifications. Stores ONLY click-to-WhatsApp ad clicks (messages[].referral with ctwa_clid)
+//          in module WA_Ad_Clicks. Message text, other messages and delivery statuses are ignored and never stored.
+// Signature header X-Hub-Signature-256 (app secret in org variable meta_wa_app_secret) is checked and recorded
+// in Signature_Check; v1 does not reject on mismatch (switch on after the first real click shows "ok").
+// POSTs always get 200 so Meta does not retry; Click_ID is a unique field, so a repeated click is not stored twice.
+req = crmAPIRequest;
+method = ifnull(req.get("method"),"").toString().toUpperCase();
+params = req.get("params");
+if(params == null)
+{
+	params = Map();
+}
+resp = Map();
+resp.put("status_code",200);
+resp.put("content-type","text/plain");
+if(method == "GET")
+{
+	expected = ifnull(zoho.crm.getOrgVariable("meta_wa_verify_token"),"").toString();
+	mode = ifnull(params.get("hub.mode"),"").toString();
+	tok = ifnull(params.get("hub.verify_token"),"").toString();
+	if(expected.length() >= 12 && mode == "subscribe" && tok == expected)
+	{
+		resp.put("body",ifnull(params.get("hub.challenge"),"").toString());
+	}
+	else
+	{
+		resp.put("status_code",403);
+		resp.put("body","forbidden");
+	}
+	return {"crmAPIResponse":resp};
+}
+resp.put("body","ok");
+bodyStr = ifnull(req.get("body"),"").toString();
+if(bodyStr == "" || bodyStr.contains("ctwa_clid") == false)
+{
+	// Nothing to store: most notifications are ordinary messages or delivery statuses.
+	return {"crmAPIResponse":resp};
+}
+// ---- signature check (recorded, not enforced) ----
+// v1.1 15 Oct 2026: on a mismatch, records why (Signature_Check holds 20 characters):
+//   "ok-trim"         the stored secret has stray spaces or a line break around it -> re-paste it cleanly
+//   "mismatch nX cY"  n1 = the body holds non-ASCII characters (emoji, rupee sign ...), n0 = plain ASCII
+//                     c1 = body bytes equal the Content-Length header (Zoho passed the body unchanged),
+//                     c0 = they differ (Zoho changed the body), cx = no Content-Length header,
+//                     cu = Zoho's URL encoder is not UTF-8, so the byte test can't be read
+//   Reading: n0 c1 -> the secret is wrong. n1 c1 -> secret wrong, or Meta signs the \u-escaped form.
+//            c0 -> Zoho altered the body; signature enforcement cannot work on this endpoint.
+// The secret is never logged or stored, only these flags.
+sigCheck = "no secret";
+secret = ifnull(zoho.crm.getOrgVariable("meta_wa_app_secret"),"").toString();
+sig = "";
+cl = "";
+hdrs = req.get("headers");
+if(hdrs != null)
+{
+	for each  hk in hdrs.keys()
+	{
+		hkl = hk.toString().toLowerCase();
+		if(hkl == "x-hub-signature-256")
+		{
+			sig = ifnull(hdrs.get(hk),"").toString();
+		}
+		else if(hkl == "content-length")
+		{
+			cl = ifnull(hdrs.get(hk),"").toString().trim();
+		}
+	}
+}
+if(secret.length() >= 16)
+{
+	if(sig == "")
+	{
+		sigCheck = "missing";
+	}
+	else
+	{
+		try
+		{
+			calc = "sha256=" + zoho.encryption.hmacsha256(secret,bodyStr,"hex");
+			if(calc.toLowerCase() == sig.toLowerCase())
+			{
+				sigCheck = "ok";
+			}
+			else
+			{
+				calcT = "sha256=" + zoho.encryption.hmacsha256(secret.trim(),bodyStr,"hex");
+				if(calcT.toLowerCase() == sig.toLowerCase())
+				{
+					sigCheck = "ok-trim";
+				}
+				else
+				{
+					// URL-encoding turns each UTF-8 byte into one character or one %XX, so it gives the byte count;
+					// bytes %80-%FF mean non-ASCII. "cu" = this encoder is not UTF-8, so the byte test can't be read.
+					enc = zoho.encryption.urlEncode(bodyStr);
+					nf = "0";
+					if(enc.replaceAll("%[89A-Fa-f][0-9A-Fa-f]","").length() < enc.length())
+					{
+						nf = "1";
+					}
+					cf = "x";
+					if(zoho.encryption.urlEncode("₹").toUpperCase() != "%E2%82%B9")
+					{
+						cf = "u";
+					}
+					else if(cl.isNumber())
+					{
+						pct = enc.length() - enc.replaceAll("%","").length();
+						if(enc.length() - 2 * pct == cl.toLong())
+						{
+							cf = "1";
+						}
+						else
+						{
+							cf = "0";
+						}
+					}
+					sigCheck = "mismatch n" + nf + " c" + cf;
+				}
+			}
+		}
+		catch (e)
+		{
+			sigCheck = "error";
+		}
+	}
+}
+// ---- store each ad click ----
+nowIst = zoho.currenttime.toString("yyyy-MM-dd'T'HH:mm:ss","Asia/Kolkata") + "+05:30";
+nowEpoch = (zoho.currenttime.toString().unixEpoch() / 1000).toString();
+stamp = zoho.currenttime.toString("dd-MMM-yyyy HH:mm","Asia/Kolkata");
+payload = bodyStr.toMap();
+entries = ifnull(payload.get("entry"),List());
+for each  en in entries
+{
+	wabaId = ifnull(en.get("id"),"").toString();
+	changes = ifnull(en.get("changes"),List());
+	for each  ch in changes
+	{
+		val = ch.get("value");
+		if(ifnull(ch.get("field"),"").toString() == "messages" && val != null)
+		{
+			md = ifnull(val.get("metadata"),Map());
+			msgs = ifnull(val.get("messages"),List());
+			for each  m in msgs
+			{
+				ref = m.get("referral");
+				if(ref != null)
+				{
+					clid = ifnull(ref.get("ctwa_clid"),"").toString();
+					if(clid != "")
+					{
+						digits = ifnull(m.get("from"),"").toString().replaceAll("[^0-9]","");
+						last10 = digits;
+						if(digits.length() > 10)
+						{
+							last10 = digits.subString(digits.length() - 10);
+						}
+						ts = ifnull(m.get("timestamp"),"").toString();
+						if(ts == "" || ts.isNumber() == false)
+						{
+							ts = nowEpoch;
+						}
+						hl = ifnull(ref.get("headline"),"").toString();
+						if(hl.length() > 250)
+						{
+							hl = hl.subString(0,250);
+						}
+						su = ifnull(ref.get("source_url"),"").toString();
+						if(su.length() > 250)
+						{
+							su = su.subString(0,250);
+						}
+						r = Map();
+						r.put("Name",last10 + " " + stamp);
+						r.put("Click_ID",clid);
+						r.put("Customer_Phone","+" + digits);
+						r.put("Phone_Last10",last10);
+						r.put("Clicked_At",nowIst);
+						r.put("Click_Epoch",ts);
+						r.put("WABA_ID",wabaId);
+						r.put("Business_Number",ifnull(md.get("display_phone_number"),"").toString());
+						r.put("Ad_ID",ifnull(ref.get("source_id"),"").toString());
+						r.put("Source_Type",ifnull(ref.get("source_type"),"").toString());
+						r.put("Source_URL",su);
+						r.put("Ad_Headline",hl);
+						r.put("Match_Status","Unmatched");
+						r.put("Signature_Check",sigCheck);
+						c = zoho.crm.createRecord("WA_Ad_Clicks",r);
+					}
+				}
+			}
+		}
+	}
+}
+return {"crmAPIResponse":resp};
+}

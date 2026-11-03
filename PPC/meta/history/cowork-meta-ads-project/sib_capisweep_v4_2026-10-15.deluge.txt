@@ -1,0 +1,284 @@
+void schedule.sib_capisweep()
+{
+// v4 15 Oct 2026 (W6). Same WhatsApp click rule as sender v3:
+//  an "Advt - WhatsApp" lead whose phone has a WhatsApp ad click in the last 7 days (standalone.sib_wa_click_lookup)
+//  goes as a business_messaging event (ValidLead -> LeadSubmitted, QualifiedLead -> QualifiedLead) to the WhatsApp
+//  dataset 1442186757791533, with only the click ID and WhatsApp account ID. One POST per run for these.
+//  If Meta rejects that POST (or the token is empty, or the lookup fails), the same leads join the normal
+//  system_generated POST below, exactly as in v3. A timeout or unreadable answer is marked and never resent.
+//  Meta_CAPI_Event keeps the CRM event name either way. The cap of 20 now counts both lists together,
+//  and a lead that appears twice in the scanned pages is taken once.
+// v3 14 Oct 2026.
+//  Sends the upgrade: a lead already sent as ValidLead that later reaches Proposal Sent / Negotiation / Payment Pending
+//  now also sends QualifiedLead (once). Field Meta_CAPI_Event records the event sent.
+//  Leads sent before v3 (Meta_CAPI_Event empty) are never re-sent: the event that went is unknown.
+//  Unchanged from v2: sources (Advt - Facebook / Instagram / WhatsApp), 600-lead scan, cap 20 per run,
+//  match keys lead_id + hashed em/ph, event_id <leadId>-<event>, custom_data.lead_source, trigger [] on marking.
+datasetId = "1242417817083521";
+apiVersion = "v21.0";
+waDatasetId = "1442186757791533";
+waApiVersion = "v26.0";
+waDefaultWaba = "2287130705376253";
+accessToken = zoho.crm.getOrgVariable("meta_capi_access_token");
+waToken = ifnull(zoho.crm.getOrgVariable("meta_wa_access_token"),"").toString().trim();
+validSet = {"Valid - RM Working","Valid - NIL RM Action","Valid - Casual RM Action","Valid - Good RM Action"};
+progressSet = {"Negotiation","Proposal Sent","Payment Pending"};
+srcSet = {"Advt - Facebook","Advt - Instagram","Advt - WhatsApp"};
+qp = Map();
+qp.put("sort_by","Modified_Time");
+qp.put("sort_order","desc");
+leads = List();
+pages = {1,2,3};
+lastSize = 200;
+for each  pg in pages
+{
+	if(lastSize == 200)
+	{
+		batch = zoho.crm.getRecords("Leads",pg,200,qp);
+		lastSize = batch.size();
+		leads.addAll(batch);
+	}
+}
+info "CAPI sweep: scanning " + leads.size() + " recently-modified leads";
+dataList = List();
+sentEvents = Map();
+waList = List();
+waSent = Map();
+waFallback = Map();
+eventTime = zoho.currenttime.toString().unixEpoch() / 1000;
+for each  rec in leads
+{
+	src = ifnull(rec.get("Lead_Source"),"").toString();
+	if(srcSet.contains(src) && dataList.size() + waList.size() < 20)
+	{
+		alreadySent = ifnull(rec.get("Meta_CAPI_Sent"),false);
+		lastEvent = ifnull(rec.get("Meta_CAPI_Event"),"").toString();
+		rmq = ifnull(rec.get("RM_Lead_Quality"),"").toString();
+		tlq = ifnull(rec.get("Mkt_Leat_Quality"),"").toString();
+		csdq = ifnull(rec.get("CSD_Lead_Quality"),"").toString();
+		status = ifnull(rec.get("Lead_Status"),"").toString();
+		eventName = "";
+		if(progressSet.contains(status))
+		{
+			eventName = "QualifiedLead";
+		}
+		else if(validSet.contains(rmq) || validSet.contains(tlq) || validSet.contains(csdq) || status == "Valid Lead")
+		{
+			eventName = "ValidLead";
+		}
+		sendIt = false;
+		if(eventName != "")
+		{
+			if(alreadySent == false)
+			{
+				sendIt = true;
+			}
+			else if(lastEvent == "ValidLead" && eventName == "QualifiedLead")
+			{
+				sendIt = true;
+			}
+		}
+		rid = rec.get("id").toString();
+		// v4: pages are read while leads change, so one lead can appear twice; take it once.
+		if(waSent.containKey(rid) || sentEvents.containKey(rid))
+		{
+			sendIt = false;
+		}
+		if(sendIt)
+		{
+			userData = Map();
+			leadId = ifnull(rec.get("leadchain0__Social_Lead_ID"),"").toString();
+			if(leadId != "")
+			{
+				userData.put("lead_id",leadId);
+			}
+			email = ifnull(rec.get("Email"),"").toString();
+			if(email != "")
+			{
+				userData.put("em",zoho.encryption.sha256(email.toLowerCase().trim()));
+			}
+			phone = ifnull(rec.get("Phone"),"").toString();
+			if(phone == "")
+			{
+				phone = ifnull(rec.get("Mobile"),"").toString();
+			}
+			if(phone != "")
+			{
+				phNorm = phone.replaceAll("[^0-9]","");
+				if(phNorm.length() == 10)
+				{
+					phNorm = "91" + phNorm;
+				}
+				userData.put("ph",zoho.encryption.sha256(phNorm));
+			}
+			event = Map();
+			if(userData.size() > 0)
+			{
+				customData = Map();
+				customData.put("lead_source",src);
+				event.put("event_name",eventName);
+				event.put("event_time",eventTime);
+				event.put("action_source","system_generated");
+				event.put("event_id",rid + "-" + eventName);
+				event.put("user_data",userData);
+				event.put("custom_data",customData);
+			}
+			// ---- v4: WhatsApp click branch ----
+			clid = "";
+			waba = "";
+			// Only leads that also have the normal match keys, so a rejected WhatsApp POST can always fall back.
+			if(src == "Advt - WhatsApp" && waToken != "" && event.size() > 0)
+			{
+				tried = List();
+				waPhones = List();
+				waPhones.add(ifnull(rec.get("WhatsApp_Number"),"").toString());
+				waPhones.add(phone);
+				for each  wp in waPhones
+				{
+					d = ifnull(wp,"").toString().replaceAll("[^0-9]","");
+					if(clid == "" && d.length() >= 10)
+					{
+						k = d.subString(d.length() - 10);
+						if(tried.contains(k) == false)
+						{
+							tried.add(k);
+							try
+							{
+								lkStr = standalone.sib_wa_click_lookup(k);
+								lk = ifnull(lkStr,"{}").toString().toMap();
+								clid = ifnull(lk.get("ctwa_clid"),"").toString();
+								waba = ifnull(lk.get("waba_id"),"").toString();
+							}
+							catch (e)
+							{
+								info "CAPI sweep: click lookup failed for lead " + rid + " - system_generated: " + e;
+								clid = "";
+							}
+						}
+					}
+				}
+			}
+			if(clid != "")
+			{
+				if(waba == "")
+				{
+					waba = waDefaultWaba;
+				}
+				waName = eventName;
+				if(eventName == "ValidLead")
+				{
+					waName = "LeadSubmitted";
+				}
+				wud = Map();
+				wud.put("whatsapp_business_account_id",waba);
+				wud.put("ctwa_clid",clid);
+				wcd = Map();
+				wcd.put("lead_source",src);
+				wev = Map();
+				wev.put("event_name",waName);
+				wev.put("event_time",eventTime);
+				wev.put("action_source","business_messaging");
+				wev.put("messaging_channel","whatsapp");
+				wev.put("event_id",rid + "-" + eventName);
+				wev.put("user_data",wud);
+				wev.put("custom_data",wcd);
+				waList.add(wev);
+				waSent.put(rid,eventName);
+				waFallback.put(rid,event);
+			}
+			else if(event.size() > 0)
+			{
+				dataList.add(event);
+				sentEvents.put(rid,eventName);
+			}
+		}
+	}
+}
+noTrig = Map();
+emptyList = List();
+noTrig.put("trigger",emptyList);
+// ---- v4: WhatsApp POST first ----
+//  ok       = accepted -> mark.
+//  rejected = Meta answered with an error -> these leads join the system_generated POST below.
+//  unknown  = timeout or unreadable answer -> Meta may have them, so mark them and never resend (no double count).
+if(waList.size() > 0)
+{
+	waState = "unknown";
+	waPayload = Map();
+	waPayload.put("data",waList);
+	try
+	{
+		waResp = invokeurl
+		[
+			url :"https://graph.facebook.com/" + waApiVersion + "/" + waDatasetId + "/events?access_token=" + waToken
+			type :POST
+			parameters:waPayload.toString()
+			content-type:"application/json"
+		];
+		info "CAPI sweep WhatsApp (" + waList.size() + ") -> " + waResp;
+		wStr = ifnull(waResp,"").toString();
+		if(wStr.contains("events_received") && ifnull(wStr.toMap().get("events_received"),0) > 0)
+		{
+			waState = "ok";
+		}
+		else if(wStr.contains("\"error\""))
+		{
+			waState = "rejected";
+		}
+	}
+	catch (e)
+	{
+		info "CAPI sweep WhatsApp: no clear answer (" + e + ")";
+	}
+	if(waState != "rejected")
+	{
+		for each  wid in waSent.keys()
+		{
+			wMap = Map();
+			wMap.put("Meta_CAPI_Sent",true);
+			wMap.put("Meta_CAPI_Event",waSent.get(wid));
+			wupd = zoho.crm.updateRecord("Leads",wid.toLong(),wMap,noTrig);
+			if(wupd.get("id") == null)
+			{
+				info "CAPI sweep: marking failed for lead " + wid + " -> " + wupd;
+			}
+		}
+		info "CAPI sweep: marked " + waSent.size() + " WhatsApp-click leads (" + waState + ")";
+	}
+	else
+	{
+		for each  fid in waFallback.keys()
+		{
+			dataList.add(waFallback.get(fid));
+			sentEvents.put(fid,waSent.get(fid));
+		}
+	}
+}
+info "CAPI sweep: " + dataList.size() + " events to send";
+if(dataList.size() > 0)
+{
+	payload = Map();
+	payload.put("data",dataList);
+	endpoint = "https://graph.facebook.com/" + apiVersion + "/" + datasetId + "/events?access_token=" + accessToken;
+	response = invokeurl
+	[
+		url :endpoint
+		type :POST
+		parameters:payload.toString()
+		content-type:"application/json"
+	];
+	info "CAPI sweep -> " + response;
+	received = ifnull(response.get("events_received"),0);
+	if(received > 0)
+	{
+		for each  sid in sentEvents.keys()
+		{
+			sentMap = Map();
+			sentMap.put("Meta_CAPI_Sent",true);
+			sentMap.put("Meta_CAPI_Event",sentEvents.get(sid));
+			upd = zoho.crm.updateRecord("Leads",sid.toLong(),sentMap,noTrig);
+		}
+		info "CAPI sweep: marked " + sentEvents.size() + " leads";
+	}
+}
+}

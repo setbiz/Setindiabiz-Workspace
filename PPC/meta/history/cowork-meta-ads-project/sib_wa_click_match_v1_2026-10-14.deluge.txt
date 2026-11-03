@@ -1,0 +1,86 @@
+void schedule.sib_wa_click_match()
+{
+// v1 14 Oct 2026. Hourly. Links each WA_Ad_Clicks record to the CRM Lead with the same phone (last 10 digits).
+//   Lead found    -> click: Lead lookup, Match_Status Matched.
+//                    Lead: CTWA_Click_ID and Meta_Ad_ID filled ONLY if blank (first touch kept). trigger [].
+//                    Lead_Source and every other field untouched (SalesIQ plug rules).
+//   No lead, existing Contact -> Match_Status Contact (deal events still find the click by phone).
+//   No match and click older than 7 days -> Expired.
+clicks = zoho.crm.searchRecords("WA_Ad_Clicks","(Match_Status:equals:Unmatched)",1,200);
+nowEpoch = zoho.currenttime.toString().unixEpoch() / 1000;
+noTrig = Map();
+emptyList = List();
+noTrig.put("trigger",emptyList);
+api = "https://www.zohoapis.com/crm/v3/coql";
+matched = 0;
+contacts = 0;
+expired = 0;
+for each  c in clicks
+{
+	last10 = ifnull(c.get("Phone_Last10"),"").toString();
+	if(last10.length() == 10 && last10.isNumber())
+	{
+		qp = Map();
+		qp.put("select_query","select id, CTWA_Click_ID, Meta_Ad_ID from Leads where (Phone like '%" + last10 + "' or WhatsApp_Number like '%" + last10 + "') order by Created_Time desc limit 1");
+		r = invokeurl
+		[
+			url :api
+			type :POST
+			parameters:qp.toString()
+			connection:"contact_to_lead"
+		];
+		upd = Map();
+		if(r != null && r.get("data") != null && r.get("data").size() > 0)
+		{
+			ld = r.get("data").get(0);
+			leadUpd = Map();
+			if(ifnull(ld.get("CTWA_Click_ID"),"").toString() == "")
+			{
+				leadUpd.put("CTWA_Click_ID",c.get("Click_ID"));
+			}
+			if(ifnull(ld.get("Meta_Ad_ID"),"").toString() == "" && ifnull(c.get("Ad_ID"),"").toString() != "")
+			{
+				leadUpd.put("Meta_Ad_ID",c.get("Ad_ID"));
+			}
+			if(leadUpd.size() > 0)
+			{
+				lu = zoho.crm.updateRecord("Leads",ld.get("id").toLong(),leadUpd,noTrig);
+			}
+			upd.put("Lead",ld.get("id"));
+			upd.put("Match_Status","Matched");
+			matched = matched + 1;
+		}
+		else
+		{
+			cq = Map();
+			cq.put("select_query","select id from Contacts where (Phone like '%" + last10 + "' or Mobile like '%" + last10 + "') limit 1");
+			cr = invokeurl
+			[
+				url :api
+				type :POST
+				parameters:cq.toString()
+				connection:"contact_to_lead"
+			];
+			if(cr != null && cr.get("data") != null && cr.get("data").size() > 0)
+			{
+				upd.put("Match_Status","Contact");
+				contacts = contacts + 1;
+			}
+			else
+			{
+				ep = ifnull(c.get("Click_Epoch"),"0").toString();
+				if(ep.isNumber() && nowEpoch - ep.toLong() > 604800)
+				{
+					upd.put("Match_Status","Expired");
+					expired = expired + 1;
+				}
+			}
+		}
+		if(upd.size() > 0)
+		{
+			cu = zoho.crm.updateRecord("WA_Ad_Clicks",c.get("id").toLong(),upd,noTrig);
+		}
+	}
+}
+info "WA click match: " + clicks.size() + " unmatched checked; matched " + matched + ", contact " + contacts + ", expired " + expired;
+}

@@ -1,0 +1,28 @@
+# Change log: SIB-04 test lead 5, Product Cat fix verified (10 Oct 2026, 12:06–12:14 IST)
+
+Follows `Change_Log_2026-10-10_SIB-04-ProductCat.md` (C70–C71). Campaign "SIB-04 Annual Filings" 120246968311680449, form "SIB-04 ACR Form v1" 2635626386872789, chain "FB SIB-04 ACR v1". No change was made in this session; every row below is a read.
+
+## Read-only checks
+| # | Item | Finding | Method |
+|---|---|---|---|
+| R69 | Test lead 4 | 1123581000946520042 (L483302) was still in CRM at 12:06. Sanjeev deleted it at about 12:07; at 12:08 COQL returned no lead from the SIB-04 form. | COQL |
+| R70 | Campaign state | At 12:06 the campaign was ACTIVE, `ads_get_errors` returned no errors, and lifetime spend and impressions were nil. Funds not yet added. | Meta connector |
+| R71 | Testing tool access | The built-in browser opened `developers.facebook.com/tools/lead-ads-testing` and was sent to the Meta for Business login page: that browser profile is not signed in to Facebook. Sanjeev signed in and ran Delete lead, then Create lead, himself at about 12:09. | Built-in browser |
+| R72 | **Test lead 5** | Lead **1123581000946400031**, created **12:09:40**. Owner **Tarun Kumar** (LG-11), assigned at 12:09:41 by rule "PPC - SIB-04 Annual Filings - LG-11". "Detect Duplicate Lead" set Duplicate_Status **No** at 12:09:42 and left the owner alone. Product_Name "ACR - Company Annual Return" (Form Tidy instant run, 12:09:41). WhatsApp_Opt_In true, Opt_In_Time 12:09. Tag FB-ACR. Reporting Manager Suman Khowal. Lead_Channel **Advt**. Lead_Source "Direct". Description holds the tool's placeholder answers, so the "<entity>, <years>" separator was not exercised. | COQL, getTimelines |
+| R73 | Race repeated, as expected | At 12:09:42 "Pull Product, Report Category and Reporting Manager" changed Product_Category from "Annual Filing" (set by the chain at creation) to null. | getTimelines |
+| R74 | **Scheduled re-run: PASS** | At **12:11:54** the scheduled action of rule "SIB-04 Form Tidy" (1123581000946541013) ran the function and changed Product_Category from null to **"Annual Filing"**, 2 min 14 s after creation. No workflow fired after it (the update sends an empty trigger list). COQL at 12:13: Product Cat "Annual Filing", owner still Tarun Kumar, Modified_Time 12:11:54. | COQL, getTimelines |
+| R75 | Report Cat blank at creation | Report_Cat is null on test lead 5. A September Meta lead (Trademark V2, 1123581000940494254) was also created with Report_Cat null; "Pull Product" filled it ("IPR") at the first edit, 22 minutes later. SIB-04 leads will therefore show Report Cat "Compliance" (R66) after the first RM edit, not at creation. Existing behaviour, not a regression. | getTimelines on both leads |
+| R76 | Lead Status blank at creation | Lead_Status is null on test lead 5. The September lead also stayed null until the RM set "Valid Lead" 33 minutes after creation. A speed-to-lead query for SIB-04 must count Lead_Status null as not yet worked; filtering only on "Establishing Contact" (the 13 Aug definition) would miss these leads. | COQL, getTimelines |
+| R77 | Lead Source on live leads | On the September lead, "Auto Classify Lead Source from URL fields - Leads" (workflow "Auto-set Lead Source from URL") set Lead_Source **"Advt - Facebook"** at creation from the URL fields that real Meta leads carry. Testing-tool leads carry none, hence "Direct" on test leads 4 and 5. Expect "Advt - Facebook" or "Advt - Instagram" on the first live lead. "Direct" on a live lead is a fault: it would also keep the lead out of rule "Meta CAPI - ValidLead", which matches only those two values (C9, 7 Oct). | getTimelines |
+
+## Changes
+None. No Meta change, no money moved, no LeadChain chain opened, no CRM record edited or deleted by Claude. One built-in browser tab was opened on the testing tool (R71).
+
+## Open
+1. **Sanjeev:** delete test lead 5 (**1123581000946400031**, owner Tarun Kumar, created 12:09:40).
+2. **Funds** (₹6,000/day + 18% GST): Sanjeev. Claude never moves money.
+3. **First live lead** (Claude checks): Lead Source "Advt - Facebook" or "Advt - Instagram" (R77); Lead Channel "Advt"; every Meta_* field filled; owner an LG-11 user, or Pavneet Kaur if none was online; Product Name, with an LLP answer giving "LLP Annual Return (ACR)"; Product Cat "Annual Filing" within about 2 minutes (R74); Description "<entity>, <years>" (first real check of the separator); Report Cat and Lead Status blank until the first RM touch (R75, R76). Then daily CRM vs Meta lead counts, and a phone test of the form's WhatsApp completion button.
+4. **Sanjeev:** tell Pavneet Kaur she receives SIB-04 form and WhatsApp leads that arrive while no LG-11 person is online.
+5. **Optional, Sanjeev to decide:** a v3 of `sib04_form_tidy` could also write Report_Cat "Compliance" only if blank, so reports grouped by Report Cat include SIB-04 leads from about minute 2 rather than from the first RM edit. Not built.
+6. Future testing-tool runs need Sanjeev to sign in to Facebook in the built-in browser, or to use his own Chrome (R71).
+7. Carried (unchanged): Messenger/Instagram buttons on live Form ads; flags (ACR-C5 CTWA AI label, "Chat on WhatsApp" pill, 9:16 safe zone, age-25 floor, video warning icon); MCA circular watch for any FY 2025-26 AOC-4/MGT-7 additional-fee relaxation (none found as of 10 Oct; latest 2026 circular found is GC 04/2026 of 31 Aug extending CCFS-2026 to 15 Sep); if one appears, pause the company "₹100 a day" ads; MGT-7-only creative by 28 Oct; on 31 Oct pause the ads quoting 30 Oct (C1, C5, LLP-C1); website fixes (LLP late-fee page; roc-filing CCFS text); WhatsApp template for form leads. Side note: Leads workflow "1 Lead Source" shows disabled (not touched).

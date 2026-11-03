@@ -1,0 +1,31 @@
+deal = zoho.crm.getRecordById("Deals", dealId.toLong());
+accObj = deal.get("Account_Name");
+if(accObj != null)
+{
+    accId = accObj.get("id");
+    acc = zoho.crm.getRecordById("Accounts", accId.toLong());
+    upd = Map();
+    if(deal.get("Meta_Campaign") == null && acc.get("First_Touch_Meta_Campaign") != null)
+    {
+        upd.put("Meta_Campaign", acc.get("First_Touch_Meta_Campaign"));
+    }
+    if(deal.get("Meta_Ad_Type") == null && acc.get("First_Touch_Meta_Ad_Type") != null)
+    {
+        upd.put("Meta_Ad_Type", acc.get("First_Touch_Meta_Ad_Type"));
+    }
+    if(deal.get("First_Touch_Source") == null && acc.get("First_Touch_Lead_Source") != null)
+    {
+        upd.put("First_Touch_Source", acc.get("First_Touch_Lead_Source"));
+    }
+    if(upd.isEmpty() == false)
+    {
+        upd.put("Attribution_Confidence", "Inherited (account)");
+        updResp = zoho.crm.updateRecord("Deals", dealId.toLong(), upd);
+    }
+    else if(deal.get("Meta_Campaign") != null && deal.get("Attribution_Confidence") == null)
+    {
+        mp = Map();
+        mp.put("Attribution_Confidence", "Direct (lead-linked)");
+        updResp = zoho.crm.updateRecord("Deals", dealId.toLong(), mp);
+    }
+}

@@ -1,0 +1,97 @@
+string standalone.sib04_siq_transfer(String conv_id)
+{
+	// SIB-04 owner-miss fallback, 8 Oct 2026 (Sanjeev). Called by Zoho Flow "SIB-04 chat fallback - 1 min to Customer Support"
+	// one minute after the Tiya - Annual Filings bot hands a WhatsApp chat to the lead owner (Compliance & ACR brand).
+	// If no human operator has picked the chat, it is transferred to the SalesIQ Customer Support department.
+	// Connection sib_siq_transfer (Zoho SalesIQ): SalesIQ.conversations.READ, SalesIQ.conversations.UPDATE.
+	// CRM function id 1123581000945603370. v1 saved 15:27; v2 (pickup before transfer) saved 17:34, 8 Oct 2026.
+	csDept = "61466000018349043";
+	api = "https://salesiq.zoho.com/api/v2/wwwsetindiabizcom/conversations/";
+	cid = ifnull(conv_id,"").trim();
+	if(cid == "")
+	{
+		return "no conversation id";
+	}
+	g = invokeurl
+	[
+		url :api + cid
+		type :GET
+		connection:"sib_siq_transfer"
+	];
+	d = g.get("data");
+	if(d == null)
+	{
+		return "could not read conversation: " + g;
+	}
+	attName = "";
+	human = false;
+	att = d.get("attender");
+	if(att != null && att.get("id") != null)
+	{
+		attName = ifnull(att.get("name"),"").toString();
+		if(ifnull(att.get("is_bot"),"").toString() != "true")
+		{
+			human = true;
+		}
+	}
+	stateKey = "";
+	cs = d.get("chat_status");
+	if(cs != null)
+	{
+		stateKey = ifnull(cs.get("state_key"),"").toString();
+	}
+	deptId = "";
+	dp = d.get("department");
+	if(dp != null)
+	{
+		deptId = ifnull(dp.get("id"),"").toString();
+	}
+	if(human)
+	{
+		return "picked by " + attName + " - no action";
+	}
+	if(stateKey == "ended" || stateKey == "closed")
+	{
+		return "chat ended - no action";
+	}
+	if(deptId == csDept)
+	{
+		return "already in Customer Support - no action";
+	}
+	hdr = Map();
+	hdr.put("Content-Type","application/json");
+	// v2 17:31 (Sanjeev "go pickup"): transfer alone returned 6139 "Given user doesn't have permission to transfer"
+	// (only someone in the chat can transfer it). Pick the chat up as the connection user first, then transfer.
+	pkBody = Map();
+	pk = invokeurl
+	[
+		url :api + cid + "/pickup"
+		type :PUT
+		parameters:pkBody.toString()
+		headers:hdr
+		connection:"sib_siq_transfer"
+	];
+	pd = pk.get("data");
+	if(pd == null)
+	{
+		return "state " + stateKey + " | dept " + deptId + " | pickup failed: " + pk;
+	}
+	pkBy = "";
+	pa = pd.get("attender");
+	if(pa != null)
+	{
+		pkBy = ifnull(pa.get("name"),"").toString();
+	}
+	body = Map();
+	body.put("department_id",csDept);
+	body.put("note","Owner did not pick the chat in 1 minute - SIB-04 auto-fallback to Customer Support");
+	t = invokeurl
+	[
+		url :api + cid + "/transfer"
+		type :PUT
+		parameters:body.toString()
+		headers:hdr
+		connection:"sib_siq_transfer"
+	];
+	return "state " + stateKey + " | dept " + deptId + " | pickup: ok (" + pkBy + ") | transfer: " + t;
+}
