@@ -116,3 +116,13 @@ Won deals close 2–4 weeks after the lead, so W won ₹ reflects October spend,
 | Facebook Ads (cross-check) | Supermetrics FA | Authenticated; not queried (Meta connector used directly) |
 | ChatGPT Ads | Supermetrics CGPTA | **Missing:** NOT_AUTHENTICATED; no CSV in `chatgpt-ads/reports/raw/`. CRM shows 0 ChatGPT leads in W vs 8 in P |
 | LinkedIn (LIA), X (TA), Reddit (RDA), Zoho via Supermetrics | Supermetrics | **Missing:** NOT_AUTHENTICATED |
+
+## T11. Addendum: source-relabelling checks (Zoho COQL, pulled 9 Nov after the zoom-out review)
+| Check | P (26 Oct–1 Nov) | W (2–8 Nov) |
+|---|---|---|
+| `Advt - ChatGPT` | 8 | 0 |
+| `AI - ChatGPT` (rule-4 relabel) | 1 | 0 |
+| `Social - WhatsApp` | 0 | 0 |
+| `Advt - WhatsApp` | 3 | 1 |
+| W leads with `CTWA_Click_ID` set, by source → campaign | — | Advt - WhatsApp → SIB-04: 1 · Advt - Facebook → SIB-04: 2 · Advt - Facebook → SIB-05: 1 |
+Result: ChatGPT leads were not relabelled (0 under either value in W). WhatsApp: 3 SIB-04 leads in W carry a CTWA click ID (1 labelled WhatsApp, 2 labelled Facebook under runbook rule 7) vs 10 Meta "conversations started" (T2).
