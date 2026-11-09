@@ -126,3 +126,18 @@ Won deals close 2–4 weeks after the lead, so W won ₹ reflects October spend,
 | `Advt - WhatsApp` | 3 | 1 |
 | W leads with `CTWA_Click_ID` set, by source → campaign | — | Advt - WhatsApp → SIB-04: 1 · Advt - Facebook → SIB-04: 2 · Advt - Facebook → SIB-05: 1 |
 Result: ChatGPT leads were not relabelled (0 under either value in W). WhatsApp: 3 SIB-04 leads in W carry a CTWA click ID (1 labelled WhatsApp, 2 labelled Facebook under runbook rule 7) vs 10 Meta "conversations started" (T2).
+
+## T12. Reference figures used in the review (added after Goldfish review; file sources in this repo)
+| Figure | Value | Source (path · section) | Status |
+|---|---|---|---|
+| Break-even CPL, 90-day CRM basis | ≈ ₹176 (revenue per CRM lead ₹352 × 50% assumed margin) | `PPC/egm/runs/2026-11-02-meta-audit/consolidated_review_report.md` · "Key Majors", first bullet | Not adopted in `kpis.md`; margin unconfirmed |
+| Break-even CPL, file basis | ≈ ₹130–135 (₹269–271 revenue per lead × 50%) | `PPC/shared/kpis.md`; `PPC/shared/business-context.md` | Adopted figure |
+| SIB-05 further-spend cap | ₹15,000 from 2 Nov ("keep running with a ₹15K further cap") | 2 Nov consolidated report · "Owner resolution" row 3 | Owner decision, **not logged in `meta/changelog.md`**. Counted here from 2 Nov 00:00 (W spend ₹11,921.51 → ₹3,078.49 left) [calc] |
+| India-entry AOV | ≈ ₹86,300 (17 won, ₹14,67,582, FDI category, 12 months, all sources) | Same row | Zoho pull of 2 Nov |
+| India-entry break-even lead→won | 8.8% = ₹3,793 CPL ÷ (₹86,300 × 50%) [calc] | Same row (CPL ₹3,793 = SIB-05 to 2 Nov, Meta) | At W CRM CPL ₹5,961 it would be 13.8% [calc] |
+| Sales-process share of losses | ≈ 51% (pricing/competition 32%, targeting 11%) | `PPC/meta/history/cowork-meta-ads-project/PROJECT-INSTRUCTIONS.md` · "DIAGNOSE, DON'T GUESS" | Cowork baseline, date not stated |
+| WhatsApp → CRM plumbing | `sib_wa_lead` plug, CTWA click capture | `PPC/meta/history/cowork-meta-ads-project/Change_Log_2026-10-07_SIB-04-CRM.md`, `…/Change_Log_2026-10-14_CTWA-Click-Capture.md` | Reference only |
+| GST gross-up on prepaid top-ups | ×1.18 | Derived from T4/T6: ₹15,000 top-up (4 Nov) = billed ₹1,893.14 + ₹10,818.72 = ₹12,711.86 = ₹15,000 ÷ 1.18 [calc]. Same for 2–3 Nov: ₹21,186.43 × 1.18 = ₹25,000 [calc] → implies a ₹25,000 top-up on 2 Nov (also in the Cowork watch log of 2 Nov) | Rate itself: verify the current GST rate notification for advertising services |
+| Funding cut-offs | Credit ran out during **3 Nov** (₹25,000 top-up exhausted) and during **5 Nov** (₹15,000 top-up exhausted); 6–8 Nov ₹0 | T4 + T6 arithmetic above | Only 2 Nov ran without a funding limit |
+| Previous week dark period | Delivery stopped ≈18:00 on 27 Oct; restarted 2 Nov | Cowork `Lead_Quality_Watch_Log_2026-11-02.md` (`PPC/meta/history/cowork-meta-ads-project/`) | P daily table (T4-P) not pulled |
+| Diwali 2026 | Dhanteras Fri 6 Nov, Lakshmi Puja Sun 8 Nov (verify on the national holiday calendar) | General calendar | Seasonality caveat for W and the next read |

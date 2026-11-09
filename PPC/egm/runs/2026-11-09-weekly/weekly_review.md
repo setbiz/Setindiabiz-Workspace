@@ -1,8 +1,8 @@
 # Weekly PPC Review — week ending 2026-11-08
 
-Elephant draft, scheduled run of 9 Nov 2026. Read-only: **no ad account was changed.** Every number is in `data.md` (table reference in brackets). `[calc]` = computed here from sourced numbers.
+Elephant draft, scheduled run of 9 Nov 2026, with factual corrections after the Goldfish review (decisions are in `consolidated_review_report.md`). Read-only: **no ad account was changed.** Platform and CRM numbers are in `data.md` T1–T11; reference figures from earlier files are in T12 with their paths. `[calc]` = computed here from sourced numbers.
 
-**Headline:** the Meta account has been **dark since 6 Nov 06:52 IST because prepaid funds are empty** (T4, T5). The week had about 3.2 days of full delivery (2, 3, 5 Nov plus ₹1.9k on 4 Nov). The previous week had about 1.75 days (dark from 27 Oct evening to 2 Nov). Neither week supports a performance verdict on the 2 Nov changes.
+**Headline:** the Meta account **stopped delivering during 5 Nov because prepaid funds ran out, and is still unfunded** (T4, T5, T12). Only **2 Nov ran without a funding limit**: credit also ran out during 3 Nov (₹25,000 top-up used up) and 5 Nov (₹15,000 top-up used up, ₹12,712 of credit after GST). Spend fell on ≈3.2 days. The previous week delivered from 26 Oct to ≈18:00 on 27 Oct. Neither week supports a performance verdict on the 2 Nov changes. W is also the pre-Diwali week (Dhanteras 6 Nov, Lakshmi Puja 8 Nov; T12).
 
 ## 1. Data provenance
 | Platform | Source | Date range | Compared with | Pulled at | Missing? |
@@ -15,7 +15,7 @@ Elephant draft, scheduled run of 9 Nov 2026. Read-only: **no ad account was chan
 | LinkedIn, X, Reddit | Supermetrics LIA / TA / RDA | — | — | — | **Missing**: not authenticated (no known live campaigns) |
 
 ## 2. Scorecard
-Qualified lead (QL) = CRM Lead_Status "Valid Lead" or "Proposal Sent" (T8). Target: break-even cost per CRM lead ≈ **₹176** (90-day CRM basis, 2 Nov audit, 50% margin assumed; `kpis.md` still shows the older ₹130–135).
+Qualified lead (QL) = CRM Lead_Status "Valid Lead" or "Proposal Sent" (T8). Target (**provisional**): break-even cost per CRM lead ≈ **₹176** on the 90-day CRM basis (T12, not adopted). On the adopted `kpis.md` basis of ₹130–135 every multiple is ≈30% higher (blended 5.2–5.4× [calc]). Both assume a 50% margin, which is unconfirmed.
 
 | Platform | Spend ₹ | Clicks | CTR | CPC ₹ | Conv. (Meta) | Cost/CRM lead ₹ | QL (CRM) | Cost/QL ₹ | vs target | vs prev |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -31,14 +31,14 @@ Won deals closed this week (paid Meta): 3, ₹7,000 (P: 6, ₹27,369) (T9). Thes
 
 ## 3. Tracking health
 - **Meta forms → CRM: OK.** 50 Meta form leads vs 47 CRM form leads (FB+IG) [T3, T7] = 94% [calc]. All W `Advt%` leads carry `Meta_Campaign`.
-- **WhatsApp → CRM: broken or lagging.** The SIB-04 WhatsApp ad set reports **10 conversations started** (₹4,949) but the CRM has **1** `Advt - WhatsApp` lead in W (T2, T7). P had 3. Either chats are not being turned into leads (agent/bot path) or they land under another source. Hypothesis: the `sib_wa_lead` plug or CTWA click capture (Cowork change logs 7–15 Oct) is not firing for the new GC05 ad.
-- **ChatGPT Ads:** 0 CRM leads in W vs 8 in P, with no platform data. Hypothesis: campaigns stopped or budget exhausted. Unverified.
+- **WhatsApp → CRM: gap confirmed, cause unknown.** The SIB-04 WhatsApp ad set reports **10 conversations started** (₹4,949; this includes ₹1,068 [calc] spent by the old ACR CTWA ads on 2 Nov). The CRM has **3** SIB-04 leads with a CTWA click ID in W: 1 labelled `Advt - WhatsApp` and 2 labelled `Advt - Facebook` under runbook rule 7 (T11). No leads went to `Social - WhatsApp`. Hypotheses: chats were not answered or not converted to leads, or the plug/click capture (T12) is missing some chats. The number of chats in the WhatsApp inbox has not been counted.
+- **ChatGPT Ads:** 0 CRM leads in W vs 8 in P. Relabelling is ruled out: 0 `AI - ChatGPT` leads in W (T11). No platform data, so W spend is unknown. If the 3 Oct campaigns at ₹500/day each are still live, that is ≈₹10,500/week (estimate, `learnings.md` 2026-10-09).
 - **Funding:** 3 interruptions in 14 days: 27 Oct evening–2 Nov, 4 Nov (₹1.9k day), 6 Nov onward (T4, T6). The ₹15,000 top-up on 4 Nov 18:06 lasted ≈1 day at ₹15,000/day of budgets.
 - Meta anomaly check: none flagged (T5).
 
 ## 4. What changed and why
 1. **Delivery was set by funding, not performance.** Spend doubled vs P only because the account ran ≈3.2 days instead of ≈1.75 (T4).
-2. **Costs per lead rose sharply after the 2 Nov targeting change.** SIB-01 CPC ₹23.55 → ₹34.73 and Meta CPL ₹143 → ₹366. SIB-02 CPC ₹18.16 → ₹39.21 and CPL ₹77 → ₹282 (T1, T1-P). CTR fell on both (1.16% → 0.89%, 1.26% → 0.89%). *Hypothesis:* the narrower layer-2 audience (behaviour AND education, age cap, Advantage+ off) raised CPMs and cut volume. That is the intended trade-off if lead quality rises. Quality is not yet readable: SIB-02 52% QL [calc 13/25] and SIB-01 45% QL [calc 5/11], on 1–7-day-old leads.
+2. **Directional only (n < 30 leads per week, partial weeks, not like-for-like): cost per lead rose after 2 Nov, driven mainly by lower CTR and click→lead conversion, not CPM.** SIB-01: CPM ₹273 → ₹308 (+13%), CTR 1.16% → 0.89%, click→lead 16.4% → 9.5% [calc T1, T1-P]. SIB-02: CPM ₹229 → ₹349 (+52%), CTR 1.26% → 0.89%, click→lead 23.6% → 13.9% [calc]. On the CRM basis, cost per lead went SIB-01 ₹143 → ₹366 and SIB-02 ₹93 → ₹293. Confounders: layer-2 targeting; the SIB-02 rebuild (P was the "- Copy" entity, W adds the Lists ad set); the SIB-01 budget moving ₹2,500 → ₹1,250 → ₹2,500 within W; funding cut-offs on 3 and 5 Nov; and the pre-Diwali week. Placement, age, region and audience-size breakdowns were not pulled. Quality is not readable yet: QL is 52% of all SIB-02 leads but 76% of worked ones (13/17), and 45% vs 83% (5/6) for SIB-01 [calc T8].
 3. **SIB-02 now runs mostly on the customer-list ad set.** Lists ₹5,755 → 20 leads at ₹288. Interest ₹1,578 → 6 leads at ₹263 (T2). The two are comparable on cost. The Lists ad set has run ≈3 delivery days, so its 7-day read is not complete.
 4. **SIB-04:** the new GC05 Form ad delivered from 2 Nov 20:42 (11 leads, ₹422/lead). The old ACR ads still spent ₹2,091 on 2 Nov before the pause (T3). 7 of 10 SIB-04 CRM leads are not yet worked (T8).
 5. **SIB-05:** ₹11,922 for 2 CRM leads (1 valid). One ad, B2 Branch office, took ₹9,450 = 79% [calc] of the campaign for 1 lead (T3). CPM ≈ ₹3,600–3,900 (T2). The owner's 2 Nov rule allows ₹15,000 of further spend. **₹3,078 [calc] remains**, under one day at the ₹4,000 budget.
@@ -51,7 +51,10 @@ Won deals closed this week (paid Meta): 3, ₹7,000 (P: 6, ₹27,369) (T9). Thes
 | Meta | Layer-2 targeting on all 8 ad sets (2 Nov) | Higher quality, lower volume | ≈3.2 delivery days. CPL up 2.5–3.7× on SIB-01/SIB-02. QL rate 45–52% on immature leads | **Inconclusive**. Extend to 7 funded days after the top-up | Not yet: pending |
 | Meta | SIB-04 age 25–45 → 25–55 (2 Nov) | More delivery on director lists | SIB-04 spent ₹10,615 in ≈3.2 days. Age breakdown not pulled | **Inconclusive**. Extend | Not yet |
 | Meta | SIB-04 reactivated (2 Nov) | Annual-filing leads and won deals through the fee-relief window | 10 CRM leads, 3 QL, 0 won so far | **Inconclusive**. Won deals lag 2–4 weeks | Not yet |
-No other changelog has a due "Review on" date.
+| Meta | SIB-04 ads replaced with GC05 creative (2 Nov) | Accurate copy after MCA GC 05/2026; leads at a similar cost | GC05 Form: ₹4,642.93 → 11 Meta leads at ₹422 (T3); 9 of 11 reached CRM. WhatsApp ad set ₹495 per conversation (T2). Old-creative baseline (30 days to 2 Nov, `learnings.md`): Form ₹365/lead, WhatsApp ₹336/chat [calc] | **Inconclusive.** 16–47% costlier than the old baseline, but bundled with 4 other SIB-04 changes | Not yet |
+
+**Note:** SIB-04 had ≥4 structural changes on 2 Nov (reactivation, layer-2 targeting, age 25–55, creative swap, `GST - Company` list). The four SIB-04 rows can only be judged together, as one "2 Nov SIB-04 relaunch package".
+No other changelog entry has a "Review on" date that has passed.
 
 ## 6. Proposed actions (ranked)
 | # | Platform | Exact change | Evidence | Expected impact | Risk / reversible? | Review on |
