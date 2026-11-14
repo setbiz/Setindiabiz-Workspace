@@ -1,178 +1,179 @@
-# Campaign Plan — Cross-platform · India Entry (FDI) · US · 2026-11/12 — DRAFT v1
+# Campaign Plan — Cross-platform · India Entry (FDI) · US · Dec 2026 — DRAFT v2
 
-_Status: draft for Goldfish review. Nothing here is built. All new entities are to be created **PAUSED**. Author: India-Entry session, 14 Nov 2026. Estimates are labelled **[est]**; arithmetic **[calc]**._
+_v1 (14 Nov) went through five isolated Goldfish reviews (2 Blockers each from measurement, CFO, compliance and customer lens; 1 Blocker from performance). v2 resolves them; each finding's outcome is listed in `consolidated_review_report.md`. Nothing here is built. Every new entity is created **PAUSED**. Estimates **[est]**; arithmetic **[calc]**._
 
 ## 1. Objective
-Win more **foreign clients** for India Entry Services (Indian subsidiary / wholly owned subsidiary, branch office, liaison office, FDI and RBI/FEMA compliance). First market: **United States**, two buyer groups:
-- **A. US companies expanding to India** (founders, CEOs, CFOs, heads of international expansion).
-- **B. Indian-origin professionals in the US planning to return and start a company in India** (owner insight, 14 Nov: layoffs and visa disruption). Their Indian company may be FDI (repatriable) or NRI non-repatriable investment; the sales call decides which, not the ad.
+Win more **foreign clients** for India Entry Services (Indian subsidiary, branch office, liaison office, FDI reporting). Market: **United States**.
+- **Group A — US companies expanding to India** (owners, CEOs, CFOs, VPs). **Phase 1 (this plan).**
+- **Group B — people in the US planning to start a company in India** (owner insight, 14 Nov). **Phase 2**, starting only when landing page (c) in §11 is live (approx. day 15). Reached through keywords, communities and neutral creative only, never by national origin, ethnicity, visa or layoff status (Meta Personal Attributes policy; LinkedIn and Google personalised-ads policies).
 
-Business result: CRM-qualified leads (Lead Status "Valid Lead" or "Proposal Sent") and won FDI deals, tracked in Zoho.
+Business result: CRM-qualified leads and won FDI deals in Zoho.
 
-## 2. Current state (source: `reports/cross-platform/2026-11-14-india-entry-diagnosis.md`, pulled 14 Nov 2026)
-- Won India-entry deals, 1 Nov 2025 – 14 Nov 2026: **20 deals, ₹16,31,480**, all from SEO - Google (11), blank (6), Direct (2), Web Chat (1). **Paid ads: 0.** FDI-category AOV ≈ **₹86,300** (17 deals, ₹14,67,582).
-- Meta SIB-05 (21 Oct–14 Nov): ₹41,223 → 8 CRM leads, 3 qualified (**all US, ₹4,454 per QL [calc]**), 0 won. UAE 39.5% of spend, 0 QL. **Paused 14 Nov** on owner approval.
-- Google Dec-25 "Subsidiary_Registration": ₹28,092, 75 clicks, CPC ₹374.6, 0 won (no negatives, policy disapprovals, no CRM import). Microsoft "Overseas – India Entry Services": ₹4,921, 0 conversions (UET not working).
-- **US search demand (Google Keyword Planner via Supermetrics, account 1859576856, 14 Nov 2026, avg monthly searches, US):** register company in india 320 · fdi in india 320 (informational) · doing business in india 90 · set up company in india 50 · start / open a company in india 40 each · incorporate in india 40 · how to start a business in india 40 · india company formation 20 · subsidiary / wholly owned subsidiary / liaison office / branch office / india entry services / NRI company registration / foreign company registration in india 10 each. Top-of-page bid ranges returned in account currency (INR assumed): set up company in india ₹607–₹8,767; register company in india ₹165–₹2,853; start/open a company in india ₹499–₹2,738; incorporate in india ₹898–₹17,980. **Implication: US search demand is narrow (≈600–700 high-intent searches/month [calc]); Google cannot absorb ₹3 lakh/month on its own.**
-- Platform access: Google, Microsoft, Meta, LinkedIn (account 506114635 "setindiabiz", INR; one ended "Test" campaign), X (18ce54c2t0g), Reddit (a2_h6g5l0mhl1xy) connected in Supermetrics. **ChatGPT Ads not connected** (owner must log in to the Supermetrics `CGPTA` link). LinkedIn also lists "Juriskps Law Offices" (530370581): **out of scope; never use it for Setindiabiz ads.**
+## 2. Current state (source: `reports/cross-platform/2026-11-14-india-entry-diagnosis.md`, 14 Nov 2026)
+- Won India-entry deals, 1 Nov 2025 – 14 Nov 2026: 20 deals, ₹16,31,480, all from SEO - Google (11), blank (6), Direct (2), Web Chat (1). **Paid: 0.** Country_Region on these deals: India 18, UK 1, US 1 (parent-company country not captured). FDI AOV ≈ ₹86,300 (17 deals).
+- Meta SIB-05 (21 Oct–14 Nov): ₹41,223 → 8 CRM leads, 3 QL, 0 won. Blended ₹13,741 per QL; **US only: ₹4,454 per QL (n = 3, directional)**; UAE 39.5% of spend, 0 QL. Paused 14 Nov (owner).
+- Google Dec-25 Subsidiary: ₹28,092, 75 clicks, ₹374.6 CPC, 0 won (no negatives; policy disapprovals, reason not recorded). Microsoft Overseas: ₹4,921, 0 conversions (UET not working). ChatGPT Ads (Oct 2026, domestic INR): 54 CRM leads, 0 won; **5 of 6 Branch & Liaison ads policy-blocked** (`shared/learnings.md`, 2026-10-09).
+- **US Google demand** (Keyword Planner via Supermetrics, account 1859576856, 14 Nov 2026; INR assumed as account currency): high-intent terms in AG1/AG2 total ≈ 620 searches/month [calc: 320+50+40+40+40+20+10×8]. Top-of-page bid ranges: register company in india ₹165–₹2,853; set up company in india ₹607–₹8,767; start/open a company in india ₹499–₹2,738; incorporate in india ₹898–₹17,980.
+- Access (checked live 14 Nov, after the diagnosis was written): LinkedIn 506114635 (INR), X 18ce54c2t0g, Reddit a2_h6g5l0mhl1xy connected in Supermetrics; ChatGPT Ads not connected. Zoho Lead_Source picklist **already contains** `Advt - LinkedIn`, `Advt - Reddit`, `Advt - ChatGPT` (verified via getFields, 14 Nov).
 
-## 3. Approach and why it should work
-**Principle:** spend where the buyer already searches (search intent converts organically today), then use B2B and social platforms to reach the same US buyers who haven't searched yet, all judged on one CRM metric: cost per qualified lead (CPQL).
+## 3. Approach (phase 1 = 4 platforms; ChatGPT, Reddit, X wait for the day-30 gate)
+| Platform | Role | Why |
+|---|---|---|
+| **Meta** (rebuild) | Main bet. US only, the targeting and the two ads that produced US QLs | Only platform with US QLs (3 at ₹4,454) |
+| **LinkedIn** | US decision-makers at companies sized for an India office | Job title, seniority, company size; pre-filled work email |
+| **Google Search** | Capture the ≈620 high-intent US searches | Same intent as organic search, which produced most wins; budget sized to demand |
+| **Microsoft Ads** | Same keywords at lower cost + LinkedIn-profile bid boosts | Small, cheap; gated on UET |
+| ChatGPT Ads | **Not in month 1.** Day-30 gate: CGPTA connected, US geo confirmed, subsidiary-only prompts, one ad passes policy | Policy blocks on branch/liaison; 0 won so far |
+| Reddit | **Not in month 1.** Phase-2 option for Group B | Owner decides subreddits (§12 D6) |
+| X | Not funded | No targeting edge |
 
-| # | Platform | Role | Phase | Why |
-|---|---|---|---|---|
-| P1 | **Google Search** | Capture high-intent US searches | 1 (week 1) | Same intent as the organic SEO - Google queries that produced 11 of 20 wins |
-| P2 | **Microsoft Ads** | Same keywords, cheaper, older B2B desktop audience; LinkedIn-profile bid boosts | 1 (after UET fixed) | Low CPC history (₹42 on India Entry); profile targeting unique to Bing |
-| P3 | **Meta (rebuilt SIB-05)** | US only, B2 Branch-office ad + new returning-founder ad, Feed + Reels | 1 | Only platform with US qualified leads to date (3 QL, ₹4,454 each) |
-| P4 | **LinkedIn** | US decision-makers at companies likely to expand to India | 1 | Job-title, seniority, company-size targeting; Lead Gen Forms pre-fill work email |
-| P5 | **ChatGPT Ads** | Conversational India-entry prompts | 2 (after CGPTA login + policy check) | New channel; prior `Advt - ChatGPT` 54 leads / 0 won (domestic) — test small |
-| P6 | **Reddit** | Returning-to-India and NRI communities | 2 (week 3) | Buyer group B discusses this openly on subreddits about NRIs, H-1B, returning to India |
-| P7 | **X** | Not funded in this cycle | — | No targeting advantage over LinkedIn/Reddit for this buyer; revisit at day 60 |
-
-**Geo:** United States only (all platforms). Google/Microsoft location option "Presence: people in or regularly in". No EU/UK (GDPR Art. 3(2) and Art. 27 representative not needed while not targeted; decision D16 of 10 Oct stands). No land-border countries (Press Note 3 (2020) as amended by Press Note 2 (2026)).
-**Language:** English.
-**Hours:** ads run 24/7; response handled by the coverage plan in §6.4.
+Geo: US only; Google/Microsoft "Presence: people in or regularly in". Language English. No EU/UK (D16, 10 Oct) and no land-border countries (Press Note 3 (2020) as amended by Press Note 2 (2026); the sales team screens beneficial ownership on the first call, Build Spec v5 §1).
 
 ## 4. Unit economics
 | Item | Value | Basis |
 |---|---|---|
-| AOV (FDI) | ₹86,300 | Zoho, 17 won, 12 months |
-| Gross margin | 60% (owner: "60–70%") | Owner, 14 Nov; use the low end |
-| Margin per won deal | ₹51,780 [calc] | 86,300 × 0.60 |
-| QL → won | **15% [est]** | No measured paid-lead rate exists (lead↔deal link missing). Assumption to be replaced at day 60 |
-| Break-even CPQL | **₹7,767 [calc]** | 51,780 × 0.15 |
-| Target CPQL | **≤ ₹6,000** | ≈ 77% of break-even, leaves room for the 15% assumption being high |
-| Break-even CPA (won) | ₹51,780 | — |
-| Reference | Meta US ₹4,454 per QL (n = 3) | Diagnosis |
-First-year value is likely higher (resident director, registered office, annual compliance are sold separately) but is **not** counted here.
+| AOV (FDI, all sources) | ₹86,300 | Zoho, 17 won |
+| Gross margin | 60% | Owner, 14 Nov ("60–70%") |
+| Margin per won deal | ₹51,780 [calc] | |
+| QL → won | **15% [est]** — no measured rate; replaced at the day-60 read | Assumption |
+| **Break-even CPQL** | **₹7,767 [calc]** | 51,780 × 0.15 |
+| Target CPQL | ≤ ₹6,000 | |
 
-## 5. Budget and cap (₹, excl. GST unless stated; monthly ceiling ₹3,00,000 set by owner 14 Nov)
-| Platform | Daily budget | Month-1 cap | Share | Start |
-|---|---|---|---|---|
-| Google Search | ₹4,000 | ₹1,20,000 | 40% | Week 1 |
-| Meta (US rebuild) | ₹1,500 | ₹45,000 | 15% | Week 1 |
-| LinkedIn | ₹2,500 | ₹75,000 | 25% | Week 1 |
-| Microsoft Ads | ₹800 | ₹25,000 | 8.3% | Week 1 after UET verified |
-| ChatGPT Ads | ₹1,000 | ₹20,000 (from week 2) | 6.7% | Week 2 |
-| Reddit | ₹750 | ₹15,000 (from week 3) | 5% | Week 3 |
-| X | ₹0 | ₹0 | 0% | — |
-| **Total** | ≈ ₹10,550 at full run | **₹3,00,000** | 100% | |
+**Sensitivity — break-even CPQL [calc] (margin 60%):**
+| QL→won ↓ / Deal value → | ₹44,000 (≈ USD 499 at ₹88 [est], price-only deal) | ₹86,300 (FDI AOV) |
+|---|---|---|
+| 10% | ₹2,640 | ₹5,178 |
+| 15% | ₹3,960 | ₹7,767 |
+| 20% | ₹5,280 | ₹10,356 |
+| 30% | ₹7,920 | ₹15,534 |
+If paid US deals close at the entry price only, the target must drop to ≈ ₹3,000–4,000. Open question for the owner: does Deal `Amount` include government fees? (§12 D3)
 
-- **Hard caps (set in each platform, not just in this plan):** Meta campaign spending limit ₹45,000; Google campaign total/shared budget with a monthly account budget of ₹1,20,000 (account-level budget order or campaign end date); LinkedIn campaign total budget ₹75,000; Microsoft campaign monthly budget ₹25,000; ChatGPT and Reddit lifetime/total budgets as above.
-- **Maximum loss month 1:** ₹3,00,000 if nothing qualifies, but kill rules (§7) cap realistic loss at ≈ ₹1,05,000 [calc: sum of per-platform kill thresholds in §7].
-- **Duration:** 30-day test from first delivery per platform; decision on day 30, full read on day 60 (lead → won lag).
-- **Scaling path to the owner's ₹25,00,000 ceiling:** only on won deals, never on lead volume (rule S3).
-- **Meta prepaid balance:** the account is prepaid and goes dark repeatedly. The India-Entry Meta campaign needs its share (₹1,500/day) funded separately from SIB-01/02/04; owner to add a payment method or a monthly top-up.
+## 5. Budget and caps (₹, **excluding 18% GST**; cash outlay ≈ ×1.18)
+Owner ceiling ₹3,00,000/month. **Month-1 commitment ₹1,80,000; ₹1,20,000 held in reserve**, released only by owner approval under rule S1.
+
+| Platform | Daily | Test cap (30 days) | Cap mechanism (one per platform) |
+|---|---|---|---|
+| Meta | ₹2,000 | ₹60,000 | **Campaign spending limit ₹60,000** |
+| LinkedIn | ₹2,000 | ₹60,000 | **Campaign total budget ₹60,000** + end date day 30 |
+| Google | ₹1,500 | ₹45,600 [calc: 1,500 × 30.4] | **Daily budget + campaign end date = launch + 30 days** (Google's monthly limit is 30.4 × daily) |
+| Microsoft | ₹500 | ₹15,200 [calc] | **Daily budget + campaign end date = launch + 30 days** |
+| **Total** | ₹6,000 | **≈ ₹1,80,800 [calc]** | |
+- **Maximum loss: ≈ ₹1,80,800** (all caps spent with nothing won). Kill rules (§7) are expected to stop weak platforms earlier, but the plan does not count on it.
+- Cash outlay incl. GST ≈ ₹2,13,300 [calc].
+- **Meta billing prerequisite:** the account is prepaid and has gone dark 3 times since 2 Nov. A prepaid balance can't be ring-fenced per campaign. Before launch the owner adds a card/auto-recharge or funds ≥ 7 days for all live Meta campaigns.
+- Test window: launch target **1 Dec 2026** (after US Thanksgiving, 26 Nov); spend ends day 30; decision at day 37 (status lag); won read at day 60 on the launch cohort. Christmas/New Year fall inside the window; results will be read as seasonal-low.
 
 ## 6. Measurement
 ### 6.1 Primary metric
-**CPQL = platform spend ÷ CRM leads with Lead_Status in (Valid Lead, Proposal Sent)** for that platform, created in the test window. Secondary: won deals and won ₹ (from converted leads, day 60).
+**QL = a lead that ever reached Lead_Status "Valid Lead" or "Proposal Sent", or was converted to a deal.** Current status alone is not used (conversion and later "Lost" would drop QLs).
+Implementation (CRM change, owner approval D5): new date field `QL_Date` on Leads, stamped once by a workflow when the status first becomes Valid Lead / Proposal Sent or the lead converts; copied to the Deal on conversion.
+**CPQL = platform spend ÷ QL count** for leads created in the window; read 7 days after spend ends.
 
-### 6.2 Attribution in Zoho (existing taxonomy, `shared/lead-source-attribution-runbook.md`)
-| Platform | How the lead gets its source | Lead_Source |
-|---|---|---|
-| Google | `gclid` in First_Visited_URL (website form) | Advt - Google |
-| Microsoft | `msclkid` | Advt - Microsoft |
-| Meta | Instant Form via LeadChain, `Meta_Ad_Type` | Advt - Facebook / Instagram |
-| LinkedIn | Lead Gen Form → Zoho (LinkedIn–Zoho CRM integration or LeadChain); website clicks via `li_fat_id` | Advt - LinkedIn |
-| Reddit | `rdt_cid` | Advt - Reddit |
-| ChatGPT | UTM `utm_source=chatgpt&utm_medium=cpc` (classifier currently maps `utm_source=chatgpt` to **AI - ChatGPT**, i.e. organic) | **Change needed:** add a rule so `utm_medium=cpc` + `utm_source=chatgpt` → `Advt - ChatGPT` (value exists in historic data; add to picklist if missing) |
-All landing URLs carry `utm_source / utm_medium=cpc / utm_campaign=<campaign name> / utm_content=<ad id>`.
+### 6.2 Attribution (verified picklist values exist)
+| Platform | Source signal | Lead_Source | Change needed |
+|---|---|---|---|
+| Meta | Instant Form → LeadChain, `Meta_Ad_Type` | Advt - Facebook / Instagram | None (in use) |
+| LinkedIn | Lead Gen Form → Zoho (LinkedIn Lead Gen Forms integration) | Advt - LinkedIn | Static Lead_Source = "Advt - LinkedIn" + Product Cat "FDI" in the integration mapping |
+| Google | `gclid` in First_Visited_URL | Advt - Google | Classifier: add `utm_medium=cpc` + `utm_source=google` → Advt - Google (fallback when gclid is stripped) |
+| Microsoft | `msclkid` | Advt - Microsoft | Same UTM fallback for `utm_source=bing` |
+| Booking-link leads | Zoho Bookings | SEO - Zoho Booking (protected) | Booking links in ads/emails carry UTMs; handlers set the source from the matching form lead (documented step) |
+Classifier changes = one Deluge edit to `automation.autoClassifyLeadSource` (owner approval D5). WhatsApp/phone contacts from ad viewers stay "Self -" (accepted gap; shown as "assisted").
 
-### 6.3 Tracking prerequisites (gate G-T, all must be true before any platform goes live)
-1. **Lead → deal conversion** for FDI leads (owner confirmed 14 Nov). Deals must keep `Lead_Source`, `UTM_*`, click IDs.
-2. **India-entry landing page** live with a form that captures `gclid/msclkid/li_fat_id/rdt_cid` and UTMs into Zoho (the site form already feeds `First_Visited_URL`; verify with one test click per platform).
-3. **Google Ads:** conversion action "IE – Website lead" (primary for bidding until offline data accrues) and offline conversion import "IE – Qualified lead" + "IE – Won deal" via Zoho CRM's Google Ads integration (or scheduled upload). Enhanced conversions for leads on.
-4. **Microsoft:** UET tag verified on setindiabiz.com; goal "IE – Website lead"; offline conversion goal "IE – Qualified lead".
-5. **LinkedIn:** Insight Tag verified; Lead Gen Form "IE US v1" connected to Zoho; conversion "IE – Lead".
-6. **Meta:** existing Instant Form 4073050519663550 + LeadChain chain "FB SIB-05 FDI v1" + CAPI sweep (ValidLead/QualifiedLead) — reuse.
-7. **Reddit:** pixel + Conversions API "Lead"; **ChatGPT:** confirm OpenAI's available conversion tracking at onboarding.
-8. Country of parent company (or "I am an individual moving to India") field on the website form, mapped to `Select_Country`.
+### 6.3 Launch gate G-T (all must pass; evidence logged in the platform changelog)
+1. FDI leads are converted into deals by sales (owner confirmed 14 Nov); Deal keeps Lead_Source, UTM_*, `QL_Date`.
+2. **Privacy notice fixed before any CRM data goes back to an ad platform**: website form notice + privacy policy say enquiry data may be shared with advertising platforms (hashed) to measure ads (Consumer Protection Act 2019 s.2(47)(ix); SPDI Rules 2011 r.4; Google/Meta/LinkedIn customer-data terms). Until then: Google/Microsoft offline import by **click ID only** (no hashed email/phone), enhanced conversions **off**. Meta CAPI for Instant Form leads continues as now (Meta collected the data on its own form with the consent line).
+3. **Test lead per platform passes**: one test submission per form/LP arrives in Zoho with the right Lead_Source, Product Cat, UTMs, and (Google/Microsoft) click ID; platform records the conversion within 24 h. Logged with timestamp.
+4. Google: conversion action "IE – Website lead" (form-submit thank-you URL on the India-entry pages only) + offline action "IE – Qualified lead" (click-ID upload from `QL_Date`). Microsoft: UET verified with Tag Helper + same two goals.
+5. LinkedIn Insight Tag verified; Lead Gen Form "IE US v1" connected; Meta form/LeadChain as is.
+6. Late-shift handler named; booking slots open 19:30–23:00 IST.
 
-### 6.4 Coverage plan (owner, 14 Nov: staff 9:30–20:00 IST, can extend to ~23:00)
-- US Eastern 9:00 = 19:30 IST; 12:30 ET = 23:00 IST. With a 23:00 IST late shift, the team covers the **US East morning**. Pacific mornings fall outside.
-- Every new US lead gets the existing booking email (template "SIB-05 India Entry – Free consultation link", widened to all India-entry sources) with a Zoho Bookings link offering slots 19:30–23:00 IST (US morning) and 08:00–10:00 IST (US evening).
-- SLA: first human contact (email or call) within 4 working hours IST; lead status updated the same day. Owner to name the late-shift handler(s).
-- A separate session will plan a Zoho Marketing Hub drip (task queued).
+### 6.4 Coverage and SLA
+US Eastern 09:00–12:30 = 19:30–23:00 IST, so the 23:00 late shift covers the **US East morning**; Pacific mornings are not covered (accepted). Booking email (existing template, widened to all India-entry sources) offers 19:30–23:00 IST and 08:00–10:00 IST. SLA: first contact within 4 working hours IST; status updated the same day. US calls are manual only, to consenting leads; no autodialler, prerecorded calls or SMS without consent (US TCPA, 47 U.S.C. 227). Drip emails: separate session (CAN-SPAM).
 
-### 6.5 Reconciliation
-Weekly (Monday) per platform: platform leads vs Zoho leads by Lead_Source and campaign; CPQL; unworked count. Saved in `reports/cross-platform/` and checked in the weekly cycle.
+### 6.5 Weekly reconciliation (Mondays)
+Per platform: platform leads vs Zoho leads (**capture ≥ 90%** or rule K0); QL count; unworked count; spend vs cap. Saved in `reports/cross-platform/`.
 
 ## 7. Kill / scale rules (pre-registered)
-| Rule | Trigger | Action |
+Only leads **≥ 3 working days old** count. If > 25% of a platform's leads are unworked at a checkpoint, the decision moves 3 days and the sales TL is alerted (no kill on a false zero).
+| Rule | When | Trigger | Action |
+|---|---|---|---|
+| K0 Capture | Daily | Zoho capture < 90% of platform leads over 2 spend days | Pause platform, fix integration |
+| K1 Early | Day 14 | Spend ÷ (QL + 1) > ₹7,767 (break-even) **and** spend ≥ ₹15,000 | Pause platform |
+| K2 Decision | Day 37 | CPQL > ₹7,767 | Pause; keep only if an open proposal ≥ ₹50,000 exists (owner decides) |
+| K3 Quality | Any | ≥ 10 worked leads, junk/invalid > 50% | Pause worst ad group/ad set |
+| K4 Policy | Any | Disapproval citing government, legal or financial services | Pause the ad, log reason, fix copy, compliance re-check |
+| S1 Scale | Day 37 | CPQL ≤ ₹6,000 on **≥ 5 QL** and ≥ 1 proposal sent | Owner may release reserve: +20%/week per platform |
+| S2 Ceiling | Day 60+ | Beyond ₹3,00,000/month | Only after ≥ 2 won paid FDI deals; +50% per month max toward ₹25,00,000; owner approval |
+Small-sample note: at these budgets each platform yields roughly 2–10 QL; day-37 calls are directional. That is why scaling needs ≥ 5 QL and won deals, and why reserve is not auto-released.
+
+## 8. Risks and compliance
+| Risk | Control | Provision |
 |---|---|---|
-| K0 Capture | 2 spend days with platform leads but 0 Zoho leads | Pause that platform; fix the integration |
-| K1 Early kill | Platform spend ≥ ₹15,000 (Google ₹20,000) with **0 QL** | Pause that platform, review terms/audience/creative |
-| K2 Day 30 | CPQL > ₹12,000 | Pause; keep only if a proposal is open with deal value ≥ ₹50,000 |
-| K3 Quality | ≥ 10 worked leads and junk/invalid > 50% | Pause worst ad group/ad set |
-| K4 Policy | Any disapproval citing government services, legal services or financial services | Pause the ad, log, fix copy; no appeal without compliance review |
-| S1 Scale | CPQL ≤ ₹6,000 over ≥ 3 QL | +20% budget per week (owner approval each time) |
-| S2 Shift | A platform is killed | Its remaining cap returns to reserve; move to the best CPQL platform only with owner approval |
-| S3 Ceiling | Monthly spend above ₹3,00,000 | Only after ≥ 2 won paid FDI deals, owner approval, max +50% per month toward ₹25,00,000 |
-Kill thresholds total: ₹20,000 + ₹15,000 × 5 = ₹95,000, plus K0 losses ≈ ₹10,000 → ≈ ₹1,05,000 realistic maximum loss [calc].
+| Implied govt affiliation | Description "Private consultancy, not a government agency…" **pinned to description position 1** on every RSA; same line in every social ad and LP; no emblems, MCA/RBI logos | Emblems and Names (Prevention of Improper Use) Act 1950; State Emblem of India (Prohibition of Improper Use) Act 2005; Google government documents & official services policy; CCPA Guidelines for Prevention of Misleading Advertisements 2022 |
+| Legal-services wording | No "lawyer, attorney, law firm, legal advice". "CS & CA Experts" only (approved D21; CS and CA on staff or retainer). LP does not name practising members without checking ICAI/ICSI advertising rules. Never use the "Juriskps Law Offices" LinkedIn account | Advocates Act 1961 ss.29, 33, 45; BCI Rules Part VI Ch. II r.36; Chartered Accountants Act 1949 and Company Secretaries Act 1980, First Schedule (solicitation/advertising) |
+| Price claims | **No price in any ad in month 1.** "From USD 499" can return only when (a) the LP shows it with all exclusions and "GST extra where applicable", and (b) evidence that deals are sold at that price is on file (bait-ad test) | Consumer Protection Act 2019 s.2(28); CCPA Misleading Ads Guidelines 2022 (bait ads, disclaimers); CCPA Dark Patterns Guidelines 2023 (drip pricing); IGST Act 2017 ss.2(6), 13 |
+| Unsubstantiated claims | No "guaranteed", timelines, "100% FDI", "no approval needed", "no need to visit India", "25,000+/18K+ clients", ratings, "free" (until the free-consultation process is documented) | ASCI Code Ch. I; CPA s.2(28); FTC Act s.5 (15 U.S.C. 45) for US viewers |
+| Regulatory accuracy | BO/LO eligibility text = approved B2/E2 wording (RBI Master Direction 10/2015-16, last updated 18 May 2021, re-checked 14 Nov by compliance reviewer); FC-GPR within 30 days (Reg. 4(1), FEMA 395/2019-RB); resident director (Companies Act 2013 s.149(3)) | FEMA 22(R)/2016-RB; FEM (Non-debt Instruments) Rules 2019 as amended (S.O. 2174(E), 3030(E), 4870(E)). **Primary copies of Press Note 2 (2026) and the S.O.s still unopened** — open before any ad mentions land-border rules (none in v2 does) |
+| Personal attributes | No ad asserts or implies national origin, immigration status or job loss | Meta Advertising Standards (Personal Attributes); Google personalised-ads policy |
+| Personal data | Privacy fix in G-T 2; no customer-list uploads | IT Act 2000 s.43A; SPDI Rules 2011 r.4, r.5; CPA 2019 s.2(47)(ix); DPDP Act 2023 notice/consent provisions from 13 May 2027 under DPDP Rules 2025 (G.S.R. 846(E)) — verify on meity.gov.in |
+| Narrow search demand | Google sized at ₹1,500/day | — |
+| Holiday season | Read as seasonal-low; won read at day 60 | — |
 
-## 8. Risks
-| Risk | Mitigation | Provision |
+## 9. Build sheet (all **PAUSED**; build only after owner approval and gate G-T)
+UTMs on every URL: `?utm_source={meta|linkedin|google|bing}&utm_medium=cpc&utm_campaign={campaign name}&utm_content={ad id/name}`.
+Landing pages for website traffic until §11 pages are live: Subsidiary → `https://www.setindiabiz.com/indian-subsidiary-registration`; Branch/Liaison → `https://www.setindiabiz.com/india-entry-services`. **Build step 0:** pull the Dec-25 Google search-term report and add any irrelevant terms to the negative list.
+
+### 9.1 Meta (account 152154124583473)
+- Campaign `META_Leads_IndiaEntry_US_Founders_202612` · objective Leads · **no campaign budget** (ad-set budget) · **campaign spending limit ₹60,000** · Advantage+ creative enhancements off · PAUSED. SIB-05 stays paused.
+- **One ad set** `US | Company expansion | Form` · ₹2,000/day · optimisation Leads (Instant Form) · targeting = SIB-05 ad set 120247068431610449 exactly, except geo:
+  - countries `["US"]`, location_types home + recent · age 25–45 · locales [6, 24] (English US/UK) · Advantage+ audience **off** (owner's manual-controls choice, 2 Nov)
+  - flexible_spec (AND across groups): work_positions {Chief executive officer 103113219728224, Chairman 108616345829139, Partner 108731319151154, Owner 110722838955052, Vice President 112451425436956, Chief financial officer 112558655421889, Owner and Founder 138050029568986, Managing Partner 143212149039647, Founder 849873341726582, Managing Director 874842615892965} AND behaviors {Small business owners 6002714898572, Facebook Page admins 6015683810783} AND education_statuses [10, 11, 3, 9]
+  - placements: Facebook Feed, Facebook Reels, Instagram Reels only (Stories + Instagram Feed excluded: ₹8,249.55 spent there for 0 leads [calc: 1,836.81 + 4,643.37 + 1,769.37])
+- Form: existing "SIB-05 India Entry Form v1" (4073050519663550), unchanged.
+- Ads (approved copy, 13 Oct, D21; existing images; CTA "Get quote"; footer on image: "Setindiabiz is a private professional services firm in India, not affiliated with any government or regulator. Government fees extra, billed at cost."):
+  - **B2 Branch office** — new ad using existing creative of ad 120247068705370449. Text: "A branch office lets your company carry out the activities the RBI permits for branches in India. Eligibility: generally a profit-making record over the last five financial years and net worth of at least USD 100,000. Applicants in some sectors and from some countries need prior RBI approval. We check eligibility and prepare the application." Headline "Open a branch office in India" · Description "5 years' profits, USD 100,000 net worth".
+  - **E2 Choose the structure** — new ad using existing creative of ad 120247068331330449. Text: "Subsidiary, branch office or liaison office? A subsidiary is an Indian company. A branch office generally needs a profit-making record over the last five financial years and net worth of at least USD 100,000. A liaison office generally needs a three-year profit-making record and net worth of at least USD 50,000; it cannot carry on business in India and is funded from abroad. Tell us your plans and we will suggest the route that fits." Headline "Which India structure fits you?" · Description "Compare the three routes".
+
+### 9.2 LinkedIn (account 506114635)
+- Campaign group `LI_IndiaEntry_US_202612`. Campaign `LI_LeadGen_IndiaEntry_US_DecisionMakers_202612` · objective Lead generation · **total budget ₹60,000**, daily ₹2,000, end date day 30 · bidding Maximum delivery · Audience Network off · audience expansion off · PAUSED.
+- Audience: Location United States · Seniority Owner, Partner, CXO, VP, Director · Job functions Business Development, Entrepreneurship, Operations, Finance · Company size 51–200, 201–500, 501–1,000 · Industries Software Development; IT Services and IT Consulting; Manufacturing; Financial Services; Pharmaceutical Manufacturing.
+- Lead Gen Form "IE US v1": first name, last name, work email, company name, job title, country; custom question "What do you want to set up in India?" (Subsidiary / Branch office / Liaison office / Not sure yet); privacy policy `https://www.setindiabiz.com/privacy-policy`; consent checkbox "I agree to be contacted by Setindiabiz by email and phone about this enquiry."; thank-you message "Thank you. Our India-entry team will email you with a link to book a call." Hidden fields: utm_campaign, utm_content.
+- **L1** (single image 1200×627 = E1-style visual, brief to Vipin after approval): Intro "Expanding to India? Choose the right structure first. Setindiabiz helps foreign companies set up an Indian subsidiary, branch office or liaison office, then handles the company filings and the FDI reporting to the Reserve Bank of India. Setindiabiz is a private professional services firm, not a government agency. Government fees extra, billed at cost." Headline "Set up your company in India" · CTA "Request Quote" (or "Learn More" if the account does not offer it).
+- **L2** (single image 1200×627 = E2-style three-column visual): Intro = E2 text above + " Setindiabiz is a private firm, not a government agency." Headline "Which India structure fits you?" · CTA "Learn More".
+
+### 9.3 Google Ads (account 1859576856)
+- Campaign `GADS_Search_IndiaEntry_US_Intent_202612` · Search only (no Display, no Search Partners) · ₹1,500/day · end date launch + 30 days · **Manual CPC for the whole test** (no strategy switch), ad-group max CPC: AG1 ₹900, AG2 ₹600 · US presence · English · all hours · PAUSED.
+- **AG1 `Subsidiary`**: [register company in india], "register company in india", [set up company in india], "set up company in india", [start a company in india], [open a company in india], [incorporate in india], "incorporate in india", [india company formation], [subsidiary in india], "subsidiary in india", [wholly owned subsidiary in india], [india subsidiary registration], [foreign company registration in india], [company registration in india for foreigners], "setting up a subsidiary in india".
+- **AG2 `Branch-Liaison`**: [branch office in india], "branch office in india", [liaison office in india], "liaison office in india", "branch office vs subsidiary in india", [india entry services].
+- **AG3 `Starting-in-India`** (Group B): **not built in phase 1**; created at phase 2 with LP (c).
+- Negative list `IE Negatives` (phrase, campaign): job, jobs, career, salary, internship, hiring, visa, h1b, green card, immigration, free, template, pdf, ppt, sample, example, meaning, definition, wikipedia, essay, notes, upsc, project, assignment, statistics, data, news, list of, top companies, best companies, mca login, mca portal, mca.gov, gov.in, spice form, name availability, delaware, llc, usa company registration, dubai, uk company, singapore company, setindiabiz, course, certification, business ideas, small business ideas, franchise, low investment, loan, gst registration, msme, udyam, proprietorship, trademark.
+- **RSA AG1** — Headlines: Set Up a Company in India · India Subsidiary Setup · Wholly Owned Subsidiary · Work with CS & CA Experts · Talk to an India Entry Expert · Private Firm, Not a Govt Body · For US Companies to India · FDI Reporting to RBI · Book a Consultation Call · Ask for a Quote · Start Your Company in India · Compare Branch vs Subsidiary · Subsidiary, Branch or Liaison?. Descriptions: **(1, pinned position 1)** Private consultancy, not a government agency. Resident director & office arranged extra. (2) Subsidiary, branch or liaison office? We compare the options and handle RBI & ROC filings. (3) Company Secretary & Chartered Accountant experts handle incorporation & FDI reporting. (4) Book a call in US morning hours (Eastern) or ask for a written quote by email.
+- **RSA AG2** — Headlines: Branch Office in India · Liaison Office in India · Branch & Liaison Office · Branch & Liaison Applications · Compare Branch vs Subsidiary · Work with CS & CA Experts · Private Firm, Not a Govt Body · Talk to an India Entry Expert · Book a Consultation Call · Ask for a Quote. Descriptions: **(1, pinned position 1)** Private consultancy, not a government agency. Fees quoted after we review your plan. (2) Branch & liaison office applications prepared and filed through an authorised bank. (3) Subsidiary, branch or liaison office? We compare the options and handle RBI & ROC filings. (4) Book a call in US morning hours (Eastern) or ask for a written quote by email.
+- Assets: sitelinks "Subsidiary setup" → /indian-subsidiary-registration; "Branch & liaison office" → /india-entry-services; "Talk to us" → /contact-us. Callouts: "CS & CA experts", "Private consultancy", "US morning call slots". No call asset; no price asset.
+
+### 9.4 Microsoft Ads (account 150488150)
+- Import 9.3 as `MSADS_Search_IndiaEntry_US_Intent_202612` · ₹500/day · end date launch + 30 days · **Manual CPC**, max CPC ₹400 (both ad groups) · network **Bing, AOL and Yahoo search (owned & operated) only** (syndicated partners off) · US · English · LinkedIn-profile bid adjustments: job function Business Development, Entrepreneurship, Finance, Operations +25%; company size 51–1,000 +15% · PAUSED. Old "2026 - Overseas - …" campaigns stay paused.
+
+## 10. Review dates + changelog
+Day 7 (capture, pacing, search terms), day 14 (K1), day 37 (K2/S1), day 60 (won, launch cohort). Every build logs in `PPC/<platform>/changelog.md` with IDs, PAUSED, cap, "Review on" = launch + 7.
+
+## 11. Landing-page requirements (input for the owner's rewrite)
+1. Three pages: (a) Subsidiary for foreign companies; (b) Branch/Liaison office; (c) "Starting a company in India from the US" (Group B; must exist before phase 2). H1 repeats the ad's main headline.
+2. Above the fold: what we do, "Private consultancy, not a government agency", the form, a booking link with hours in IST and ET.
+3. Form (≤ 6 fields): name, email (not "work email" on page c), phone with country code, company (optional on c), "What do you want to set up?" (Subsidiary / Branch / Liaison / Private limited company / Not sure), "Where is your parent company incorporated?" incl. "I am an individual". Consent line + privacy link; hidden UTM and click-ID fields; notice updated per G-T 2.
+4. Price (only once approved per §8): "From USD 499 — consultation and services up to the Certificate of Incorporation. Government fees, stamp duty and DSC extra. Registered office and resident director arranged separately. GST extra where applicable." No strike-through or "save".
+5. Trust: plain-English glossary for CS, CA, ROC, RBI, FDI; how US clients pay (wire/card, invoice in USD); only evidenced proof (offices, CIN); client logos/testimonials only with written permission.
+6. Content: structure comparison; BO/LO eligibility (FEMA 22(R)/2016-RB); resident-director rule (s.149(3)); FC-GPR; timelines only as marked estimates; on page (c) an FAQ covering foreign-citizen and OCI founders and when a founder becomes resident (no legal conclusions in ads).
+7. SEO: unique title/meta, FAQ schema, internal links to guides; canonical for any `/lp/` copy.
+
+## 12. Decisions for the owner
+| # | Decision | Recommendation |
 |---|---|---|
-| Implied government affiliation | Every ad set/LP: "Private consultancy, not a government agency"; no emblem, MCA/RBI logos | Emblems and Names (Prevention of Improper Use) Act 1950; State Emblem of India (Prohibition of Improper Use) Act 2005; Google "Government documents and official services" policy; CCPA Misleading Ads Guidelines 2022 |
-| Legal-services claims | Never "lawyer, attorney, law firm, legal advice"; use "CS & CA team" (approved D21, 13 Oct). Never use the "Juriskps Law Offices" LinkedIn account | Advocates Act 1961 s.29, s.33; Bar Council of India Rules, Part VI Ch. II r.36 (no advertising by advocates) |
-| Misleading claims | No "guaranteed", "fast", "100% FDI allowed", "no approval needed", "no need to visit India", "set up in X days" (Build Spec v5 §1). Price only as "From USD 499 + govt fees" with exclusions, and only once the LP shows the same price | Consumer Protection Act 2019 s.2(28); ASCI Code Ch. I; for US audiences FTC Act s.5 (15 U.S.C. 45) |
-| Regulatory accuracy | Branch/liaison eligibility (BO: profit in each of last 5 yrs + net worth ≥ USD 100,000; LO: 3 yrs + USD 50,000) belongs on the LP, not in ads; FC-GPR within 30 days of allotment | FEM (Establishment in India of a Branch Office or a Liaison Office or a Project Office or any other place of business) Regulations 2016 (FEMA 22(R)/2016-RB) and RBI Master Direction No. 10/2015-16 (updated to 18 May 2021, re-read 12 Oct 2026); Reg. 4(1) FEMA 395/2019-RB; FEM (Non-debt Instruments) Rules 2019 incl. S.O. 2174(E), 3030(E), 4870(E) |
-| Resident director | Ads state "resident director arranged separately"; never imply none is needed | Companies Act 2013 s.149(3) |
-| NRI audience nuance | Ads don't state FEMA residency or repatriation positions; sales assesses NRI vs FDI route | FEMA 1999 s.2(v), s.2(w); NDI Rules 2019 Schedule IV (non-repatriation NRI investment) |
-| Discriminatory targeting | No ethnicity/national-origin targeting on any platform; buyer group B reached by keywords, subreddits and creative only | Platform ad policies; US Civil Rights norms reflected in Meta/LinkedIn targeting rules |
-| Lead data | Privacy policy link on every form; consent checkbox (existing Meta form wording); no list uploads in this plan | IT Act 2000 s.43A + SPDI Rules 2011 r.4, r.5; DPDP Act 2023 (notice/consent provisions from 13 May 2027 under DPDP Rules 2025, G.S.R. 846(E) — verify on meity.gov.in) |
-| Narrow search demand | Google budget may not spend; unspent cap is not moved without approval | — |
-| Team capacity / time zone | Late shift to 23:00 IST; booking link; SLA | — |
-| Cannibalising SEO | Brand terms excluded; monitor organic India-entry leads weekly (should not drop) | — |
-| ChatGPT/OpenAI policy | Check current OpenAI ad policies for legal/financial-services restrictions before build | OpenAI advertising policies (verify at onboarding) |
-
-## 9. Build sheet (all entities created **PAUSED**)
-**Landing pages (owner is rewriting; requirements in §11).** Until the new page is live, Google/Microsoft/LinkedIn website traffic uses `https://www.setindiabiz.com/indian-subsidiary-registration` (subsidiary) and `https://www.setindiabiz.com/india-entry-services` (branch/liaison, NRI). Price headlines/descriptions are **held back** until the LP shows "From USD 499" with the same exclusions.
-UTM template: `?utm_source={platform}&utm_medium=cpc&utm_campaign={campaign_name}&utm_content={ad_id}`.
-
-### 9.1 Google Ads (account 1859576856)
-- Campaign: `GADS_Search_IndiaEntry_US_Intent_202611` · Search only (no Display, no Search Partners) · Budget ₹4,000/day · Bidding: Maximize clicks, max CPC ₹700 for the first 14 days or 15 conversions, then Maximize conversions on "IE – Qualified lead" (owner approval) · Location US, presence only · Language English · Schedule all hours · Ad rotation optimise · Start PAUSED.
-- **Ad group 1 `Subsidiary`** (exact + phrase): [register company in india], "register company in india", [set up company in india], "set up company in india", [start a company in india], [open a company in india], [incorporate in india], "incorporate in india", [india company formation], [subsidiary in india], "subsidiary in india", [wholly owned subsidiary in india], "wholly owned subsidiary in india", [india subsidiary registration], [foreign company registration in india], [company registration in india for foreigners], "setting up a subsidiary in india".
-- **Ad group 2 `Branch-Liaison`**: [branch office in india], "branch office in india", [liaison office in india], "liaison office in india", "branch office vs subsidiary in india", [india entry services], "india entry services".
-- **Ad group 3 `Returning-Founder`**: "start business in india from usa", "how to start a business in india", [nri company registration in india], "nri company registration", "start a company in india as nri", "moving back to india business".
-- **Negative list `IE Negatives`** (phrase, campaign level): job, jobs, career, salary, internship, hiring, visa, h1b, green card, immigration, free, template, pdf, ppt, sample, example, meaning, definition, wikipedia, essay, notes, upsc, project, assignment, statistics, data, news, list of, top companies, best companies, mca login, mca portal, mca.gov, gov.in, spice form, name availability, delaware, llc usa, usa company registration, dubai, uk company, singapore company, setindiabiz (brand), course, certification.
-- **RSA, ad group 1** — Headlines: Set Up a Company in India · India Subsidiary Setup · Wholly Owned Subsidiary · CS & CA-Led India Team · Talk to an India Entry Expert · Private Firm, Not a Govt Body · For US Companies to India · FDI & RBI Filings Handled · FC-GPR & FEMA Reporting · Book a Consultation Call · Get a Written Quote · Start Your Company in India · Compare Branch vs Subsidiary · _[held until LP shows price]_ From USD 499 + Govt Fees. Pin "Private Firm, Not a Govt Body" to position 3. Descriptions: (1) Subsidiary, branch or liaison office? We compare the options and handle RBI & ROC filings. (2) Private consultancy, not a government agency. Resident director & office arranged extra. (3) Book a call at a time that suits your US time zone, or ask for a written quote by email. (4) _[held until LP shows price]_ Incorporate your Indian subsidiary with a CS & CA team. From USD 499 + govt fees & DSC.
-- **RSA, ad group 2** — Headlines: Branch Office in India · Liaison Office in India · Branch & Liaison Office · BO/LO Filing via AD Bank · Compare Branch vs Subsidiary · CS & CA-Led India Team · Private Firm, Not a Govt Body (pin 3) · Talk to an India Entry Expert · Book a Consultation Call · Get a Written Quote. Descriptions: (1) Branch & liaison office applications through your AD bank, plus ROC registration after. (2) Subsidiary, branch or liaison office? We compare the options and handle RBI & ROC filings. (3) Private consultancy, not a government agency. Resident director & office arranged extra. (4) Book a call at a time that suits your US time zone, or ask for a written quote by email.
-- **RSA, ad group 3** — Headlines: Moving Back to India? · Returning to India? Plan Now · Set Up Before You Move Back · Start Your Company in India · Indian Pvt Ltd for NRIs · CS & CA-Led India Team · Private Firm, Not a Govt Body (pin 3) · Talk to an India Entry Expert · Book a Consultation Call. Descriptions: (1) Planning to move back to India? Set up your private limited company with a CS & CA team. (2) Private consultancy, not a government agency. Resident director & office arranged extra. (3) Book a call at a time that suits your US time zone, or ask for a written quote by email.
-- Assets: sitelinks "Subsidiary setup" (/indian-subsidiary-registration), "Branch & liaison office" (/india-entry-services), "FDI reporting (FC-GPR)" (/fdi-reporting-fcgpr), "Contact us" (/contact-us); callouts "CS & CA team", "Private consultancy", "Written quote first", "US time-zone calls"; no call asset (Indian number, outside US hours).
-
-### 9.2 Microsoft Ads (account 150488150 "SETINDIABIZ 2026-27")
-- Import 9.1 as `MSADS_Search_IndiaEntry_US_Intent_202611`, ₹800/day, monthly cap ₹25,000, Enhanced CPC off, max CPC ₹400, US, English. LinkedIn profile bid adjustments: Job function Business Development / Entrepreneurship / Finance / Operations +25%; Company size 51–1,000 +15%. Old "2026 - Overseas - India Entry Services" and "- Indian Subsidiary" stay paused (not deleted). Activation gated on UET verification.
-
-### 9.3 Meta (account 152154124583473) — rebuild, not reactivation
-- New campaign `META_Leads_IndiaEntry_US_Founders_202611` (Leads, CBO ₹1,500/day, **campaign spending limit ₹45,000**). SIB-05 stays paused (history kept).
-- Ad set 1 `US | Company expansion | Form`: US only, age 30–65, English, targeting = copy of SIB-05 ad set "Subsidiary | Form | INTL" detailed targeting (saved "India Desk" stack + owner layer-2 behaviours), placements **Facebook Feed, Facebook Reels, Instagram Reels only** (Stories and Instagram Feed excluded: ₹8,056 for 0 leads [calc]). Ads: **B2 Branch office** (existing creative 120247068705370449 duplicated) + new **F1 "Expanding to India"** (brief to follow).
-- Ad set 2 `US | Returning founders | Form`: US only, age 25–50, interests to be copied from the same stack plus Advantage+ audience with suggestions; new ads **R1 "Moving back to India?"** and **R2 "Set up before you move"** (brief to follow).
-- Form: existing "SIB-05 India Entry Form v1" (4073050519663550); add Q1 option "Private limited company (I am moving to India)" → new form v2 (forms can't be edited after use).
-- Advantage+ creative enhancements off.
-
-### 9.4 LinkedIn (account 506114635)
-- Campaign group `LI_IndiaEntry_US_202611` (total ₹75,000). Campaign `LI_LeadGen_IndiaEntry_US_DecisionMakers_202611`: objective Lead generation, Lead Gen Form "IE US v1" (fields: first name, last name, work email, company, job title, country; custom Q "What do you want to set up in India?" Subsidiary / Branch / Liaison / Not sure), privacy policy URL, ₹2,500/day, Maximum delivery with cost cap off for first 14 days.
-- Audience: Location US; Seniority Owner, Partner, CXO, VP, Director; Job functions Business Development, Entrepreneurship, Operations, Finance; Company size 11–5,000; Industries Software Development, IT Services and IT Consulting, Manufacturing, Financial Services, Pharmaceutical Manufacturing; Audience expansion off; LinkedIn Audience Network off.
-- Ads: single image (1200×627) ×2: L1 "Expanding to India?" and L2 "Subsidiary, branch or liaison office?" (brief to follow).
-
-### 9.5 ChatGPT Ads (phase 2; gate: CGPTA connected + OpenAI policy check)
-- Campaign `CGPT_Search_IndiaEntry_US_Intent_202612`, US, ₹1,000/day, total ₹20,000, topics/prompts: "set up company in India", "US company subsidiary in India", "branch office vs subsidiary India", "liaison office India", "move back to India start a company". Ad text from 9.1 descriptions; URL with `utm_source=chatgpt&utm_medium=cpc`.
-
-### 9.6 Reddit (phase 2, account a2_h6g5l0mhl1xy)
-- Campaign `RDT_Traffic_IndiaEntry_US_Returning_202612`, conversion objective Leads (pixel), US, ₹750/day, total ₹15,000. Communities: r/nri, r/returnToIndia, r/h1b, r/IndiaInvestments, r/ABCDesis, r/IndianStartups (verify each is targetable in the Reddit UI at build). Ad R1 copy; comments **off** at launch.
-
-## 10. Review date + changelog
-- Review 1: 7 days after first delivery (capture, spend pacing, search terms). Review 2: day 30 (K2). Review 3: day 60 (won deals).
-- Each build logs in `PPC/<platform>/changelog.md`: entity IDs, PAUSED, budget, cap, "Review on" = build date + 7.
-
-## 11. Landing-page requirements for the owner (input only; the owner edits the site)
-1. **One page per message:** (a) Subsidiary for US companies, (b) Branch/Liaison office, (c) "Moving back to India? Start your company". Each H1 repeats the ad's main headline.
-2. **Above the fold:** what we do, "Private consultancy, not a government agency", form, a US-time-zone booking link.
-3. **Form fields (max 6):** name, work email, phone with country code, company (optional for group B), "What do you want to set up?" (Subsidiary / Branch / Liaison / Private limited — moving to India / Not sure), "Where is your parent company incorporated?" (or "I am an individual"). Consent text and privacy link. Hidden fields keep UTMs and click IDs.
-4. **Price block** exactly as ads: "From USD 499 — consultation and services up to the Certificate of Incorporation. Government fees, stamp duty and DSC extra. Registered office and resident director arranged separately." Show USD; no "save" or strike-through prices.
-5. **Trust proof:** only evidenced items (CS & CA team names and membership numbers with consent; real client logos/testimonials with written permission). Do not use "18K+", "200+ foreign entities", ratings until evidence is on file (`shared/business-context.md`).
-6. **Process and documents:** entity comparison (subsidiary vs branch vs liaison), eligibility for BO/LO per FEMA 22(R)/2016-RB, resident director requirement (s.149(3)), FC-GPR reporting, realistic timeline ranges marked as estimates.
-7. **Contact:** email, WhatsApp, booking link with US-friendly slots, hours stated in both IST and ET.
-8. **SEO:** unique title/meta per page, FAQ schema, internal links to blog/wiki guides; canonical rules for any `/lp/` copies.
+| D1 | Approve phase 1: Meta ₹60k, LinkedIn ₹60k, Google ₹45.6k, Microsoft ₹15.2k (≈ ₹1.8L + GST), reserve ₹1.2L | Approve |
+| D2 | No price in ads until the LP shows it and evidence of USD 499 sales is on file | Agree |
+| D3 | Does Deal Amount include government fees? What do US-type FDI deals actually sell for? | Answer |
+| D4 | Privacy notice + policy update (G-T 2) | Approve; text drafted after approval |
+| D5 | CRM changes: `QL_Date` field + workflow; classifier UTM fallback; LinkedIn integration mapping | Approve |
+| D6 | Phase 2 (Group B): page (c) live → Google AG3 + one Meta ad set + Reddit (r/returnToIndia, r/IndianStartups; owner decides on r/nri and r/h1b) | Decide at day 15 |
+| D7 | Meta billing: card/auto-recharge or ≥ 7 days prefunded | Required before launch |
+| D8 | Late-shift handler name(s) | Required before launch |
