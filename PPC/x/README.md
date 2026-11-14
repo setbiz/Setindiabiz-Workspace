@@ -1,7 +1,7 @@
 # X Ads
 
 ## Account
-- Account ID: TODO
+- Account ID: 18ce54c2t0g "setindiabiz". Supermetrics `TA` connected 14 Nov 2026 (reporting only)
 - Access / owner: TODO
 - Billing currency: INR (confirm)
 

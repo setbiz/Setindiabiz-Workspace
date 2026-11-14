@@ -1,7 +1,7 @@
 # Reddit Ads
 
 ## Account
-- Account ID: TODO
+- Account ID: a2_h6g5l0mhl1xy "setindiabiz" (business: Setindiabiz Private Limited). Supermetrics `RDA` connected 14 Nov 2026 (reporting only)
 - Access / owner: TODO
 - Billing currency: INR (confirm)
 
