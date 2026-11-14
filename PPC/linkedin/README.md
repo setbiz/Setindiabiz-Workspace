@@ -1,7 +1,7 @@
 # LinkedIn Ads
 
 ## Account
-- Account ID: TODO
+- Account ID: 506114635 "setindiabiz" (INR). Supermetrics `LIA` connected 14 Nov 2026. Do NOT use 530370581 "Juriskps Law Offices" or 502298970 for Setindiabiz ads
 - Access / owner: TODO
 - Billing currency: INR (confirm)
 
