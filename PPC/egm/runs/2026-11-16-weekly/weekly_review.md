@@ -1,8 +1,8 @@
 # Weekly PPC Review — week ending 2026-11-15
 
-Elephant draft, scheduled run of 16 Nov 2026. Read-only: no ad account was changed. Numbers come from `data.md` (T#). `[calc]` = computed here. India Entry (SIB-05) is now run by a dedicated session (PRs setbiz/Setindiabiz-Workspace#2 and #3). It is reported here for completeness only, with no actions.
+Elephant draft, scheduled run of 16 Nov 2026, with factual corrections after the Goldfish review (decisions are in `consolidated_review_report.md`). Read-only: no ad account was changed. Numbers come from `data.md` (T#, with Elephant follow-ups in T10). `[calc]` = computed here. India Entry (SIB-05) is now run by a dedicated session (PRs setbiz/Setindiabiz-Workspace#2 and #3). It is reported here for completeness only, with no actions.
 
-**Headline:** the Meta account delivered on **3 days (11–13 Nov)** and has been **dark since 13 Nov: prepaid funds are empty** (T1, T3). Every top-up this month has run out within 1.5 days. Despite that, the second matured week confirms the ranking: **SIB-02 Trademark is the only campaign near a workable cost per qualified lead. SIB-01 and SIB-04 are getting worse.** ChatGPT Ads is live again and visible in Supermetrics for the first time.
+**Headline:** the Meta account delivered on **3 days (11–13 Nov)** and has been **dark since 13 Nov: prepaid funds are empty** (T1, T3). Every top-up this month has run out within 1.5 days. On cost per qualified lead, SIB-02 Trademark ranks first (₹524 over 2 weeks). SIB-01 and SIB-04 look worse, but most of their recent leads are unworked, and **no campaign is yet shown to be above break-even on revenue** (no margin, no per-service AOV). ChatGPT Ads is live again and visible in Supermetrics for the first time.
 
 ## 1. Data provenance
 | Platform | Source | Date range | Compared with | Pulled at | Missing? |
@@ -29,9 +29,9 @@ QL = CRM "Valid Lead" + "Proposal Sent". Target cost per CRM lead: **₹130–13
 All [calc] from T2, T4, T5, T8. P matured ₹/QL uses P spend (PR #1 T1) ÷ P QL now (T5). vs target: blended ₹504 ≈ 3.7–3.9× the ₹130–135 target [calc]. Won (paid Meta, closed in W): 1 deal, ₹1,000, from an old CCFS campaign (T7). CPA n/a (2–4 week lag).
 
 ## 3. Tracking health
-- **Meta forms → CRM: OK.** 57 Meta leads (incl. form leads) vs 58 CRM leads (FB 20, IG 34, WA 4), all carrying `Meta_Campaign` (T1, T4).
+- **Meta forms → CRM: 3 form leads unreconciled.** 57 Meta form leads vs 54 CRM FB + IG leads (SIB-02 −1, SIB-04 −2) (T10e). All CRM leads carry `Meta_Campaign`, but the 5 SIB-04 WhatsApp leads have **no `Meta_Ad_Set`** (T10a).
 - **WhatsApp:** Meta reports 2 conversations in W; CRM has 4 `Advt - WhatsApp` leads in W. Counts are now the other way round from P (10 vs 1), so the two systems still don't reconcile. The 9 Nov capture test (A5) has not been reported.
-- **ChatGPT Ads: now measurable.** ₹2,114.58 spend, 2 platform conversions, 5 CRM leads (T8). P had ₹0 spend, which explains 0 CRM leads in P. No ChatGPT-sourced deal exists since September.
+- **ChatGPT Ads: spend now visible; lead attribution still loose.** No spend 2–13 Nov; restarted 14 Nov, unlogged (T10c). W: ₹2,114.58, 2 platform conversions, 5 `Advt - ChatGPT` CRM leads, 0 under `AI - ChatGPT` (T10d). 26 Oct–1 Nov: ₹9,469 → 8 CRM leads. No ChatGPT-sourced deal since September. Conversion tracking is still TODO (`chatgpt-ads/README.md`).
 - **Funding:** 4 interruptions since 27 Oct. ₹50,000 added in November across 3 top-ups (₹15,000, ₹10,000, ₹25,000), each used up within ≈1.5 days (T3, PR #1 T6/T12).
 - **Unlogged change:** the 12 Nov 06:46 status change on 10 SIB-04 ads by an "ads MCP server" session is not in `meta/changelog.md` on main (T3).
 
@@ -41,13 +41,13 @@ All [calc] from T2, T4, T5, T8. P matured ₹/QL uses P spend (PR #1 T1) ÷ P QL
 3. **SIB-01 is deteriorating:** 2 QL out of 14 W leads, and **11 of 14 are not yet worked** (T4). The matured P cohort was 5 of 11 QL. Combined spend 2–15 Nov is ₹9,082.76 for 7 QL = ₹1,298 per QL [calc], 2.5× SIB-02's ₹524 [calc 15,730.39 ÷ 30]. The ₹2,500/day budget (owner restore on 4 Nov) is still in place.
 4. **SIB-04 WhatsApp has collapsed:** ₹1,930.74 per conversation in W (₹494.92 in P; ₹336 per chat in the October baseline, `learnings.md`). CPM is the cheapest in the account (₹130) but CTR is 0.45% (T2). *Hypothesis:* the GC05 "fee relief" message lowered urgency for chat-starters. The form ad set is steadier at ₹528 per lead. SIB-04 overall: ₹20,283 over 2 weeks → 23 CRM leads → 7 QL (P 5 matured) [calc].
 5. **The sales backlog moved only slightly:** the P cohort went from 21 to 17 unworked in a week; W adds 30 unworked out of 58 (52%) (T4, T5). Lead quality can't be judged on leads nobody has called.
-6. **SIB-05** spent ₹6,541.62 for 0 leads before the India-Entry session paused it on 14 Nov with owner approval (T2, T3).
+6. **SIB-05** spent ₹6,541.62 for 0 leads (confirmed by a direct campaign pull, T10b) before the India-Entry session paused it on 14 Nov with owner approval (T2, T3).
 
 ## 5. Due reviews (from changelogs on main)
 | Platform | Change (date) | Expected | Actual | Verdict | Learning recorded? |
 |---|---|---|---|---|---|
 | Meta | SIB-01 budget ₹2,500 → ₹1,250 (2 Nov), review 16 Nov | Lower spend, judge lead quality | Ran ≈2 days; owner restored ₹2,500 on 4 Nov (PR #1 T6). At ₹2,500: ₹1,298 per QL over 2–15 Nov | **Test not run** (reverted). Data since then favours the cut | Proposed below |
-| Meta | 2 Nov SIB-04 relaunch package (reactivation, layer-2, age 25–55, GC05 creative, GST-Company list), reviews due 9 Nov | Annual-filing leads at ≤ the October cost | 2 weeks: Form ₹422 → ₹528 per lead; WhatsApp ₹495 → ₹1,931 per conversation; 7 QL from ₹20,283 | **Mixed: Form acceptable, WhatsApp failing.** Won deals still lagging | Proposed below |
+| Meta | 2 Nov SIB-04 relaunch package (reactivation, layer-2, age 25–55, GC05 creative, GST-Company list), reviews due 9 Nov | Annual-filing leads at ≤ the October cost (Form ₹365/lead, WhatsApp ₹336/chat, `learnings.md`) | 2 weeks, CRM: Form ₹637/lead, ₹1,912/QL (18 leads, 10 unworked); WhatsApp ₹1,762/lead, ₹8,811/QL (5 leads, 4 unworked) (T10a). Meta-side (same basis as October): Form ₹515 → ₹528 per lead; WhatsApp ₹8,811 ÷ 12 conversations = ₹734 per conversation [calc] | **Both paths fail the October cost target** (Meta basis: Form +41–45%, WhatsApp 2.2×). Cause can't be isolated (5 stacked changes). Won deals still lagging | See consolidated A8 |
 | Meta | Layer-2 targeting on all ad sets (2 Nov), review 9 Nov | Higher quality, lower volume | Matured P QL rates: SIB-02 48%, SIB-01 45%, SIB-04 50% (T5). No pre-2-Nov cohort at the same lead age has been pulled | **Inconclusive: no baseline.** SIB-02 works under layer-2; SIB-01 doesn't | Not yet |
 
 ## 6. Proposed actions (ranked by expected impact)

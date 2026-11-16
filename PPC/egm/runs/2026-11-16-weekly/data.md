@@ -82,3 +82,17 @@ CRM: `Advt - ChatGPT` leads created in W = **5** (Lead_Status: 4 empty, 1 Lost).
 | Google Ads AW (1859576856) | No rows (no activity) |
 | Microsoft Ads AC (150488150, 150329248) | No rows (no activity) |
 | LinkedIn LIA, X TA, Reddit RDA | Not authenticated (missing) |
+
+## T10. Addendum: Elephant follow-ups after the Goldfish review (pulled 16 Nov ≈11:30 IST)
+**a) SIB-04 CRM leads by path, created 2–15 Nov (Zoho `Meta_Ad_Set` + `Lead_Source`)**
+| Path | Spend 2–15 Nov ₹ | CRM leads | QL | Unworked | Lost/Postponed | ₹/CRM lead | ₹/QL |
+|---|---|---|---|---|---|---|---|
+| Form ad set | 11,472.40 (P 5,665.79 + W 5,806.61) | 18 | 6 | 10 | 2 | 637 | 1,912 |
+| WhatsApp (`Advt - WhatsApp`; **`Meta_Ad_Set` empty on all 5**) | 8,810.64 (P 4,949.17 + W 3,861.47) | 5 | 1 | 4 | 0 | 1,762 | 8,811 |
+[calc]. P ad-set spends from PR #1 data.md T2. Correction: the "₹422" P Form figure in the draft was the GC05 **ad**-level cost (₹4,642.93 ÷ 11, PR #1 T3). The **ad-set** cost was ₹5,665.79 ÷ 11 = ₹515 [calc].
+
+**b) SIB-05 campaign-level insights, W (direct pull, not a residual):** ₹6,541.62, 1,949 impr., 10 clicks, 0 leads. Matches the residual in T2.
+
+**c) ChatGPT Ads by day (CGPTA), 26 Oct–15 Nov:** spend 26 Oct–1 Nov ₹9,469.34 [calc] (Branch & Liaison ₹3,297.13; CFO ₹2,670.82; GST ₹3,501.39; 2 platform conv.); **no rows 2–13 Nov (₹0)**; 14 Nov ₹1,559.96 (CFO ₹990.02 + GST ₹569.94); 15 Nov ₹554.62 (CFO). So W spend ₹2,114.58 fell on 14–15 Nov only: the campaigns restarted around 14 Nov, which isn't logged in `chatgpt-ads/changelog.md`. Branch & Liaison last spent on 1 Nov.
+**d) CRM ChatGPT:** P (2–8 Nov): 0 `Advt - ChatGPT`, 0 `AI - ChatGPT`. W: 5 `Advt - ChatGPT`, 0 `AI - ChatGPT`. 26 Oct–1 Nov: 8 `Advt - ChatGPT` (PR #1 T7) for ₹9,469 = ₹1,184 per CRM lead [calc].
+**e) Meta form leads vs CRM form leads, W:** Meta 57 form leads (T2: 24 + 8 + 11 + 14) vs CRM FB + IG 54 (T4), so **3 form leads unreconciled** (SIB-02 32 vs 31; SIB-04 11 vs 9 [13 − 4 WA]).
