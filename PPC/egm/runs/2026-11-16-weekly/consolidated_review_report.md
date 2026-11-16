@@ -54,7 +54,7 @@
 | A4 | Owner | Supply **gross margin %, trademark AOV, and whether deal Amount includes govt fees**. Approve kill rules (CFO F2): SIB-02 Interest pause if ₹/QL > ₹700 after ₹7,000; SIB-04 Form pause if CRM ₹/lead > ₹568 after ₹17,500; SIB-02 → ₹2,000/day if the 2–15 Nov cohort has 0 won by 7 Dec | ☐ |
 | A5 | Owner | ChatGPT Ads: hard ceiling ₹7,115 cumulative from 14 Nov. Pause both campaigns if < 4 QL by then (counted on worked leads), or if 0 won by 31 Dec | ☐ |
 | A6 | Owner (option) | If SIB-01 survives 19 Nov: switch its Instant Form to **Higher Intent** (one change, reversible) instead of a budget cut | ☐ |
-| A7 | Claude | Add to `shared/learnings.md`: the SIB-01 cut was not tested (reverted 4 Nov); the SIB-04 relaunch package failed the October cost target with confounded causes; SIB-02 Lists beat Interest on ₹/QL (₹493 vs ₹679, directional, list-basis caveat); ChatGPT had 0 won from 62 leads (54 + 8) [check] | ☐ |
+| A7 | Claude | Add to `shared/learnings.md`: the SIB-01 cut was not tested (reverted 4 Nov); the SIB-04 relaunch package failed the October cost target with confounded causes; SIB-02 Lists beat Interest on ₹/QL (₹493 vs ₹679, directional, list-basis caveat); ChatGPT Ads: no deal with `Lead_Source = Advt - ChatGPT` created since 1 Sep 2026 (T8) | ☐ |
 | A8 | Owner | SIB-04 WhatsApp ad set 120247072309210449: **₹2,000 → ₹1,500/day** (−25%) now; decide pause or keep on 19 Nov after its 4 leads are worked | ☐ |
 
 **Deferred to the next run:** expected-revenue-per-₹ column; ad, placement, age, frequency and form-type drivers; CAPI event health; SIB-02 Lists frequency and duplicate check; ₹0 budget lines for idle platforms.
