@@ -1,0 +1,300 @@
+<title>India Entry Decisions</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: one reading column of decision cards, grouped by topic, with a sticky progress bar. */
+:root{
+  --bg:#f5f7fb; --surface:#ffffff; --fg:#14213d; --muted:#5b6782; --line:#dde3ee;
+  --accent:#e2531c; --accent-soft:#fde9e0; --navy:#12305e; --ok:#1f7a4d; --ok-soft:#e1f3ea;
+  --warn:#9a6200; --warn-soft:#fdf1d9;
+  --font-display:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;
+  --font-body:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1422; --surface:#151f33; --fg:#e8edf6; --muted:#9aa7c0; --line:#26334d;
+  --accent:#ff7a45; --accent-soft:#3a2219; --navy:#9fc1ff; --ok:#57c98e; --ok-soft:#173326;
+  --warn:#f0b54a; --warn-soft:#3a2c12; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1422; --surface:#151f33; --fg:#e8edf6; --muted:#9aa7c0; --line:#26334d;
+  --accent:#ff7a45; --accent-soft:#3a2219; --navy:#9fc1ff; --ok:#57c98e; --ok-soft:#173326;
+  --warn:#f0b54a; --warn-soft:#3a2c12; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 64px;display:grid;gap:28px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:1.9rem;color:var(--navy)}
+h2{font-size:1.25rem;color:var(--navy)}
+h3{font-size:1.02rem}
+p{margin:0}
+.lede{color:var(--muted);max-width:65ch}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding-block:10px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.bar-in{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.track{flex:1 1 200px;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);transition:width .3s}
+.count{font-variant-numeric:tabular-nums;font-weight:600;font-size:.9rem}
+.sync{font-size:.8rem;color:var(--muted)}
+.status{display:grid;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.status ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.grid2>div{min-width:0}
+.pill{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:99px}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.wait{background:var(--warn-soft);color:var(--warn)}
+section{display:grid;gap:14px}
+.sec-head{display:grid;gap:4px;padding-top:6px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:12px}
+.card.done{border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.qhead{display:flex;gap:10px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.qid{font-family:var(--font-display);font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.ctx{color:var(--muted);font-size:.92rem;max-width:70ch}
+.ctx b{color:var(--fg);font-weight:600}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.opt:hover{border-color:var(--navy)}
+.opt input{margin-top:4px;accent-color:var(--accent)}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt .lab{font-weight:600}
+.opt .desc{display:block;color:var(--muted);font-size:.88rem;font-weight:400}
+.rec{font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ok);background:var(--ok-soft);border-radius:99px;padding:1px 7px;margin-left:6px;white-space:nowrap}
+textarea{width:100%;box-sizing:border-box;min-height:62px;font:inherit;font-size:.92rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;resize:vertical}
+textarea:focus,.opt:focus-within{outline:2px solid var(--accent);outline-offset:1px}
+label.rl{font-size:.8rem;font-weight:600;color:var(--muted)}
+.imgs{display:flex;gap:12px;flex-wrap:wrap}
+.imgs figure{margin:0;display:grid;gap:4px}
+.imgs img{display:block;border-radius:8px;border:1px solid var(--line);height:240px;width:auto;max-width:100%}
+.imgs figcaption{font-size:.75rem;color:var(--muted)}
+.note{font-size:.85rem;background:var(--warn-soft);color:var(--fg);border-radius:8px;padding:8px 10px}
+.foot{display:grid;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+button{font:inherit;font-weight:600;border:0;border-radius:8px;padding:10px 16px;background:var(--navy);color:var(--surface);cursor:pointer}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums}
+td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.tw{overflow-x:auto}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+
+<div class="bar"><div class="bar-in">
+  <span class="count" id="count">0 of 0 answered</span>
+  <div class="track" aria-hidden="true"><div class="fill" id="fill"></div></div>
+  <span class="sync" id="sync">Connecting…</span>
+</div></div>
+
+<main class="wrap">
+  <header style="display:grid;gap:8px">
+    <span class="pill wait">Needs Sanjeev · 20 Nov 2026</span>
+    <h1>India Entry (US) decisions</h1>
+    <p class="lede">Each card asks one decision, shows the options and marks my recommendation. Pick one and add remarks if you want. Answers save as you go and I read them from here, so there is nothing to send. Nothing goes live until you approve the previews.</p>
+  </header>
+
+  <div class="status">
+    <h2>Where we stand</h2>
+    <div class="grid2">
+      <div><p><span class="pill ok">Done</span></p>
+        <ul>
+          <li>SIB-05 Meta campaign paused (14 Nov)</li>
+          <li>US plan approved: ₹1.8 lakh + GST in month 1, ₹1.2 lakh in reserve</li>
+          <li>Google Search campaign built, paused, set for 1–30 Dec</li>
+          <li>Meta campaign staged as a draft with a ₹60,000 cap (B2 + E2 ads)</li>
+          <li>Zoho: "QL Date" field created on Leads and Deals</li>
+          <li>LinkedIn, X, Reddit and ChatGPT Ads connected to reporting</li>
+          <li>Both landing pages live with USD prices</li>
+        </ul></div>
+      <div><p><span class="pill wait">Waiting</span></p>
+        <ul>
+          <li>Microsoft campaign and LinkedIn lead form: the approval links expired before anyone opened them</li>
+          <li>Meta billing (prepaid account keeps going dark)</li>
+          <li>Evening cover for US leads</li>
+          <li>Zoho workflows (UI only; steps ready below)</li>
+          <li>LinkedIn images and audience</li>
+        </ul></div>
+    </div>
+    <div class="tw"><table>
+      <caption style="text-align:left;font-weight:600;padding-bottom:6px">Expected traffic, month 1 (estimates)</caption>
+      <tr><th>Platform</th><th>Cap</th><th>Leads / month [est]</th><th>Basis</th></tr>
+      <tr><td>Meta</td><td>₹60,000</td><td>≈ 13</td><td>US cost per lead under SIB-05: ₹4,454 (3 leads)</td></tr>
+      <tr><td>LinkedIn</td><td>₹60,000</td><td>8–15</td><td>₹4,000–8,000 per lead assumed; no account history</td></tr>
+      <tr><td>Google</td><td>₹45,600</td><td>2–9</td><td>50–110 clicks at ₹400–900, 4–8% form rate</td></tr>
+      <tr><td>Microsoft</td><td>₹15,200</td><td>1–5</td><td>40–100 clicks at ₹150–400, 3–5% form rate</td></tr>
+      <tr><th>Total</th><th>₹1,80,800</th><th>≈ 24–42 (1–1.5 a day)</th><td>Most arrive in US daytime, 6:30 PM–4:30 AM IST</td></tr>
+    </table></div>
+  </div>
+
+  <div id="sections"></div>
+
+  <div class="foot">
+    <h2>Done answering?</h2>
+    <p class="lede">You don't need to do anything else; I'll read your answers and take it from there. If saving didn't work for you (the bar at the top says so), copy your answers and paste them into the chat.</p>
+    <div><button type="button" id="copy">Copy all answers</button> <span class="sync" id="copied"></span></div>
+    <textarea id="copybox" rows="4" hidden aria-label="Answers as text"></textarea>
+  </div>
+</main>
+
+<script>
+const Q = [
+ // ---------- A. Launch ----------
+ {sec:"A",id:"A1",t:"When should I send the Microsoft and LinkedIn approval links again?",
+  c:"Supermetrics needs you to click Approve on each change. Each link expires 15 minutes after I create it, so I send them only when you're at your screen. Approving also turns on Supermetrics AI changes for that account, but nothing goes live without your OK here.",
+  o:[["now","Send them at a time I name in remarks","I'll be at my screen then"],["ui","I'll build them myself in each platform's UI","You get a step-by-step checklist"],["skip","Skip Microsoft for now","Its ₹15,200 stays in reserve"]],r:"now"},
+ {sec:"A",id:"A2",t:"Launch date",
+  c:"Google and Meta are built for 1 Dec, after US Thanksgiving (26 Nov). Christmas falls in the 30-day window, so I'll read results with that in mind.",
+  o:[["d1","1 December 2026","As planned"],["n25","25 November","Earlier start; catches the pre-holiday week"],["d8","8 December","Gives a week more for tracking and the Zoho setup"]],r:"d1"},
+ {sec:"A",id:"A3",t:"Meta billing",
+  c:"The Meta account is prepaid and has gone dark 3 times since 2 Nov. One prepaid balance can't be kept for this campaign alone. The campaign's ₹60,000 spending limit is its cap.",
+  o:[["card","I've added a card or auto-recharge",""],["prefund","I'll prefund at least 7 days before launch","Say the date in remarks"],["help","I need help setting it up",""]],r:"card"},
+ // ---------- B. Lead handling ----------
+ {sec:"B",id:"B1",t:"Who answers US leads in the evening, and until when?",
+  c:"US Eastern 9 AM–12:30 PM is 7:30–11 PM IST. Your answer on 14 Nov: you and a few sales staff, possibly until midnight. Please name them in remarks.",
+  o:[["mid","Me + named sales staff until midnight IST","Covers the US East morning"],["11","One person (e.g. Karishma) until 11 PM IST",""],["next","Email/WhatsApp only, call back next morning IST","Slowest; expect fewer qualified leads"]],r:"mid"},
+ {sec:"B",id:"B2",t:"First reply to a new US lead",
+  c:"The existing SIB-05 booking email (free consultation link) can be widened to every India Entry lead.",
+  o:[["auto","Automatic email with a booking link, then a personal email or WhatsApp","Booking slots 7:30–11 PM IST and 8–10 AM IST"],["wa","WhatsApp message first","Only if the lead gave a number"],["call","Phone call first","US mobile calls: manual only, no auto-dialler (US TCPA)"]],r:"auto"},
+ {sec:"B",id:"B3",t:"Booking slots for US clients",
+  c:"Your landing pages show hours as Mon–Sat 9:30 AM–6:30 PM IST, which is 11 PM–8 AM US Eastern.",
+  o:[["both","Open 7:30–11 PM IST and 8–10 AM IST slots in Zoho Bookings","US morning and US evening"],["eve","Evening IST only (7:30–11 PM)",""],["std","Keep current hours",""]],r:"both"},
+ // ---------- C. Landing pages and price ----------
+ {sec:"C",id:"C1",t:"Show a price in the ads yet?",
+  c:"Your pages now show prices: <b>India Entry page:</b> Pvt Ltd by an individual $349, wholly owned subsidiary $499, branch/liaison office $999. <b>Subsidiary page:</b> Basic $349, Silver $499, Gold $799. You said pricing is still being revised.",
+  o:[["hold","No price in ads until you confirm final pricing","The S1 'from USD 499' image waits"],["499","Use 'from USD 499' for subsidiary now","Matches the India Entry page; the Subsidiary page's Basic $349 makes 'from 499' inconsistent"],["349","Use 'from USD 349'","Lowest price on both pages; the S1 image needs an edit"]],r:"hold"},
+ {sec:"C",id:"C2",t:"Which subsidiary price is right?",
+  c:"The two pages don't match: the India Entry page lists the subsidiary at $499; the Subsidiary page has three packages starting at $349. An ad's price must match its landing page (CPA 2019 s.2(28); CCPA Misleading Ads Guidelines 2022).",
+  o:[["pk","The packages ($349 / $499 / $799) are right","Update the India Entry page"],["one","$499 for a subsidiary is right","Update the Subsidiary page"],["rev","Both change with the revised pricing",""]],r:"rev"},
+ {sec:"C",id:"C3",t:"GST wording on the pages",
+  c:"The Subsidiary page says GST applies. For a foreign client paying in foreign currency, the fee can be an export of services, zero-rated under your LUT (IGST Act 2017 s.2(6), s.13(2), s.16). GST does apply to an individual in India or a client paying in rupees.",
+  o:[["where","Change it to 'GST extra where applicable'","Covers both cases"],["always","GST always applies; keep as is",""],["ca","I'll check with our CA",""]],r:"where"},
+ {sec:"C",id:"C4",t:"Trust claims on the pages",
+  c:"The India Entry page shows a <b>4.8 Google rating</b> and client logos (e.g. Porter, Aviva, Pepperfry, Testbook). Ads won't repeat them either way, but the page needs evidence: a dated rating screenshot and written permission for each logo (CPA 2019 s.2(28); ASCI Code Ch. I).",
+  o:[["have","We have the screenshot and logo permissions on file",""],["get","I'll get them this week",""],["remove","Remove the unverified ones",""]],r:"have"},
+ {sec:"C",id:"C5",t:"Additions for US visitors on both pages",
+  c:"US buyers look for a time-zone-friendly way to talk, USD payment and an exit if India isn't right. Suggested near the form: 'US clients: book a call 9 AM–1 PM ET', 'Invoices in USD; pay by wire or card', and the 'independent consultancy, not a government body' line above the fold.",
+  o:[["all","Add all three",""],["some","Add some (say which in remarks)",""],["no","Leave the pages as they are",""]],r:"all"},
+ {sec:"C",id:"C6",t:"One citation to check on the India Entry page",
+  c:"The page says a subsidiary can pay 22% tax 'under Section 200'. Under the Income-tax Act, 1961 that option is section 115BAA. If the page cites the Income-tax Act, 2025 (in force from 1 Apr 2026), name that Act next to the section so readers aren't confused.",
+  o:[["fix","Our team will check and correct the citation",""],["ok","It's correct as it is",""]],r:"fix"},
+ // ---------- D. Ad images ----------
+ {sec:"D",id:"D1",t:"Meta ads: which images run",
+  c:"The draft Meta campaign uses B2 (branch office) and E2 (choose the structure). These are the approved creatives, and B2 produced the US qualified leads. Placements are Feed (4:5) and Reels (9:16).",
+  imgs:[["b2-45","B2 · 4:5"],["b2-916","B2 · 9:16"],["e2-45","E2 · 4:5"],["e2-916","E2 · 9:16"]],
+  o:[["as","B2 + E2 as built",""],["e1","B2 + E2 + E1 'Enter India with confidence'","A third ad splits ₹2,000/day three ways"],["b2","B2 only",""]],r:"as"},
+ {sec:"D",id:"D2",t:"B2 image edit: the sign is cut off",
+  c:"On both sizes the building sign reads 'BRANCH OFFIC'; the last letter is cropped at the right edge. Suggested fix: move the photo left so the full word shows, or crop the sign out. Nothing else needs changing.",
+  imgs:[["b2-45","B2 · 4:5"],["b2-916","B2 · 9:16"]],
+  o:[["me","I'll fix it in Canva (design 'Ads 4:5' p.6 and '9:16 Stories/Reels' p.6)","Then I swap the image in the draft"],["vipin","Ask Vipin to fix it",""],["as","Run it as is",""]],r:"me"},
+ {sec:"D",id:"D3",t:"LinkedIn images",
+  c:"LinkedIn needs new sizes. My suggestion: E1 and E2 as 1200×1200 squares (square performs best on mobile). Same text and footer; keep the 'not affiliated with any government' line readable. Your Canva design '2026 Ads – 1200X1200' already uses this size.",
+  imgs:[["e1-45","E1 · 4:5 (source)"],["e2-45","E2 · 4:5 (source)"]],
+  o:[["me","I'll resize E1 and E2 to 1200×1200 in Canva",""],["vipin","Email the brief to Vipin (cc me)","I'll send it with 2–4 reference ads from global firms"],["wide","Use 1200×627 landscape instead",""]],r:"vipin"},
+ {sec:"D",id:"D4",t:"The price image (S1, 'from USD 499')",
+  c:"Its fine print says 'Govt fees, stamp duty and DSC extra… resident director arranged separately'. Your pages say 'government fee, stamp duty and taxes at actuals'. Hold until pricing is final, then align the wording with the page.",
+  imgs:[["s1-45","S1 · 4:5"],["s1-916","S1 · 9:16"]],
+  o:[["hold","Hold until final pricing","Then edit the price and fine print"],["now","Use now as is",""],["retire","Retire it",""]],r:"hold"},
+ {sec:"D",id:"D5",t:"Other approved images (not in the month-1 plan)",
+  c:"E1, S2 (after incorporation) and B1 (liaison office) are approved and ready. I suggest keeping them as backups, to rotate in if B2 or E2 tire (frequency above 2.5).",
+  imgs:[["e1-45","E1"],["s2-45","S2"],["b1-45","B1"],["e1-916","E1 · 9:16"]],
+  o:[["keep","Keep as backups",""],["add","Add them now",""],["drop","Don't use them",""]],r:"keep"},
+ // ---------- E. Platforms ----------
+ {sec:"E",id:"E1",t:"Google: ad groups and pages",
+  c:"Built: 'Subsidiary' keywords go to /indian-subsidiary-registration, and 'Branch-Liaison' keywords go to /india-entry-services. Manual CPC (max ₹900 and ₹600), US only, 92 negative keywords, disclaimer pinned.",
+  o:[["as","Keep both ad groups as built",""],["sub","Subsidiary only for the first 2 weeks",""],["swap","Send all traffic to /india-entry-services",""]],r:"as"},
+ {sec:"E",id:"E2",t:"Microsoft Ads in month 1?",
+  c:"₹500/day, same keywords as Google. The connector can't set an end date, so I'll pause it on day 30. The UET tracking tag has never recorded a conversion, so it needs a check before launch.",
+  o:[["yes","Include it; I'll pause it on day 30",""],["google","Drop it; move ₹15,200 to Google",""],["later","Start it later",""]],r:"yes"},
+ {sec:"E",id:"E3",t:"Tracking tags on setindiabiz.com",
+  c:"Which tags are installed? Tick in remarks if unsure. I'll test each with a test lead before launch either way.",
+  o:[["all","Google tag, Meta Pixel, Microsoft UET and LinkedIn Insight Tag are all installed",""],["some","Some are installed (list them in remarks)",""],["dk","I don't know; please check",""]],r:"dk"},
+ {sec:"E",id:"E4",t:"LinkedIn: who sets up the audience",
+  c:"The connector can't set seniority, job function, company size or industry. Setup takes about 15 minutes in Campaign Manager: US · Owner/Partner/CXO/VP/Director · Business Development, Entrepreneurship, Operations, Finance · companies of 51–1,000 · Software, IT Services, Manufacturing, Financial Services, Pharma. ₹2,000/day, total ₹60,000.",
+  o:[["me","I'll do it from your checklist",""],["meta","Skip LinkedIn in month 1; move ₹60,000 to Meta","Meta is the only platform with US qualified leads so far"],["later","Start LinkedIn after the first Meta read (day 14)",""]],r:"me"},
+ {sec:"E",id:"E5",t:"LinkedIn leads into Zoho",
+  c:"LinkedIn form leads must land in Zoho as 'Advt - LinkedIn' with Product Cat FDI.",
+  o:[["lc","Use LeadChain (as for Meta), if it supports LinkedIn",""],["zoho","Use Zoho's own LinkedIn Lead Gen integration",""],["csv","Daily CSV export, entered by sales","Slow; for the first week only"]],r:"lc"},
+ {sec:"E",id:"E6",t:"ChatGPT Ads",
+  c:"Now connected. Earlier domestic campaigns: 54 leads, 0 won, and 5 of 6 branch/liaison ads blocked by policy.",
+  o:[["gate","Day-30 gate: test subsidiary-only prompts if US targeting and a policy check pass",""],["now","Start ₹500/day now",""],["skip","Skip ChatGPT Ads",""]],r:"gate"},
+ {sec:"E",id:"E7",t:"Reddit (phase 2)",
+  c:"For people in the US planning to start a company in India. Ads can't target or mention nationality, visas or layoffs.",
+  o:[["two","r/returnToIndia and r/IndianStartups only",""],["four","Also r/nri and r/h1b",""],["skip","Skip Reddit",""]],r:"two"},
+ {sec:"E",id:"E8",t:"X (Twitter)",
+  c:"No targeting advantage over LinkedIn or Reddit for this buyer.",
+  o:[["no","No budget this cycle; revisit at day 60",""],["test","Small test (₹10,000)",""]],r:"no"},
+ {sec:"E",id:"E9",t:"Returning-founder audience (phase 2)",
+  c:"The ads need a page that speaks to them: 'Starting a company in India from the US', with an FAQ on foreign-citizen and OCI founders and on when a founder becomes resident. Without it, phase 2 waits.",
+  o:[["page","Create a new page for this audience",""],["section","Add a section to the Subsidiary page instead",""],["skip","Skip this audience for now",""]],r:"page"},
+ // ---------- F. Zoho and tracking ----------
+ {sec:"F",id:"F1",t:"Zoho workflows (UI only)",
+  c:"Three changes you approved on 14 Nov need clicks in Zoho Setup: (1) a workflow stamps <b>QL Date</b> the first time Lead Status becomes Valid Lead, Need Analysis, Proposal Sent, Negotiation or Payment Pending; (2) map QL Date from Lead to Deal in the lead-conversion mapping; (3) add a UTM fallback to the lead-source rule (utm_medium=cpc with utm_source google, bing, linkedin, reddit or chatgpt sets 'Advt - …'). I'll write the exact click path and the Deluge code.",
+  o:[["admin","Our Zoho admin will do it from your steps","Say who in remarks"],["me","I'll do it myself from your steps",""],["later","After launch",""]],r:"admin"},
+ {sec:"F",id:"F2",t:"Sending qualified leads back to Google",
+  c:"This lets Google learn which clicks became qualified leads. Until the privacy notice is updated, only the click ID is sent, never an email or phone number.",
+  o:[["native","Set up the Zoho CRM ↔ Google Ads integration","An admin clicks Connect; I give the steps"],["later","After the privacy update",""],["skip","Skip it; judge from Zoho reports only",""]],r:"native"},
+ {sec:"F",id:"F3",t:"Privacy notice update (website session)",
+  c:"I'll put the prompt for your website session in the chat and the repo. It updates the form notice and privacy policy so enquiry data may be shared, hashed, with ad platforms to measure ads (CPA 2019 s.2(47)(ix); SPDI Rules 2011 r.4).",
+  o:[["yes","Send me the prompt; I'll run it this week",""],["later","Later",""]],r:"yes"},
+ // ---------- G. Budget ----------
+ {sec:"G",id:"G1",t:"Month-1 budget split",
+  c:"Approved 14 Nov: Meta ₹60,000 · LinkedIn ₹60,000 · Google ₹45,600 · Microsoft ₹15,200, all plus GST, with ₹1.2 lakh in reserve.",
+  o:[["as","Keep as approved",""],["meta","Move ₹20,000 from LinkedIn to Meta","Leans on the only US evidence"],["other","Something else (remarks)",""]],r:"as"},
+ {sec:"G",id:"G2",t:"Releasing the ₹1.2 lakh reserve",
+  c:"Rule: a platform with ≥ 5 qualified leads at ≤ ₹6,000 each and at least one proposal sent may grow 20% a week, with your OK each time. Above ₹3 lakh a month only after 2 won paid FDI deals.",
+  o:[["ok","Keep this rule",""],["looser","Release earlier, on 3 qualified leads",""],["tighter","Release only after a won deal",""]],r:"ok"}
+];
+const SECS={A:["Launch","Timing, approvals and billing."],B:["Lead handling","Who answers US leads, and how fast."],C:["Landing pages and price","What the two live pages say, and what ads may claim."],D:["Ad images","Images from your Canva folder 'PPC 2026'. Tell me any edits; you or Vipin make them."],E:["Platforms","Google, Microsoft, LinkedIn, ChatGPT, Reddit, X."],F:["Zoho and tracking","Steps that need Zoho or website access."],G:["Budget","Caps and the reserve."]};
+
+const state={}; let db=null, col=null;
+const $=s=>document.querySelector(s);
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+function render(){
+  const root=$("#sections"); root.textContent="";
+  Object.keys(SECS).forEach(k=>{
+    const s=document.createElement("section");
+    s.innerHTML=`<div class="sec-head"><h2>${k}. ${esc(SECS[k][0])}</h2><p class="lede">${esc(SECS[k][1])}</p></div>`;
+    Q.filter(q=>q.sec===k).forEach(q=>{
+      const card=document.createElement("article"); card.className="card"; card.id="q-"+q.id;
+      const imgs=q.imgs?`<div class="imgs">${q.imgs.map(([f,cap])=>`<figure><img src="img/${f}.jpg" alt="${esc(cap)} ad image" loading="lazy"><figcaption>${esc(cap)}</figcaption></figure>`).join("")}</div>`:"";
+      const opts=q.o.map(([v,l,d])=>`<label class="opt" data-v="${v}"><input type="radio" name="${q.id}" value="${v}" id="${q.id}-${v}"><span><span class="lab">${esc(l)}</span>${v===q.r?'<span class="rec">Recommended</span>':""}${d?`<span class="desc">${esc(d)}</span>`:""}</span></label>`).join("");
+      card.innerHTML=`<div class="qhead"><h3>${esc(q.t)}</h3><span class="qid">${q.id}</span></div><p class="ctx">${q.c}</p>${imgs}<div class="opts" role="radiogroup" aria-label="${esc(q.t)}">${opts}</div><label class="rl" for="${q.id}-rem">Remarks</label><textarea id="${q.id}-rem" placeholder="Optional: names, dates, edits, anything else"></textarea>`;
+      s.appendChild(card);
+      card.querySelectorAll("input").forEach(i=>i.addEventListener("change",()=>save(q.id,{choice:i.value})));
+      const ta=card.querySelector("textarea"); let t;
+      ta.addEventListener("input",()=>{clearTimeout(t);t=setTimeout(()=>save(q.id,{remarks:ta.value}),700)});
+    });
+    root.appendChild(s);
+  });
+  paint();
+}
+function paint(){
+  let n=0;
+  Q.forEach(q=>{
+    const a=state[q.id]||{}; const card=document.getElementById("q-"+q.id); if(!card)return;
+    card.querySelectorAll(".opt").forEach(o=>{const on=o.dataset.v===a.choice;o.classList.toggle("sel",on);o.querySelector("input").checked=on});
+    const ta=card.querySelector("textarea"); if(document.activeElement!==ta && typeof a.remarks==="string") ta.value=a.remarks;
+    card.classList.toggle("done",!!a.choice); if(a.choice)n++;
+  });
+  $("#count").textContent=`${n} of ${Q.length} answered`;
+  $("#fill").style.width=(100*n/Q.length)+"%";
+}
+function local(){try{localStorage.setItem("ie-dec",JSON.stringify(state))}catch(e){}}
+async function save(id,patch){
+  state[id]=Object.assign({},state[id],patch); paint(); local();
+  if(!col){$("#sync").textContent="Saved in this browser only";return}
+  try{$("#sync").textContent="Saving…";await col.doc(id).set(Object.assign({},state[id],{updatedAt:new Date().toISOString()}));$("#sync").textContent="Saved"}
+  catch(e){$("#sync").textContent="Couldn't save online; use Copy all answers at the bottom"}
+}
+$("#copy").addEventListener("click",async()=>{
+  const lines=Q.map(q=>{const a=state[q.id]||{};const o=q.o.find(x=>x[0]===a.choice);return `${q.id} ${q.t}: ${o?o[1]:"(no answer)"}${a.remarks?" | Remarks: "+a.remarks:""}`});
+  const txt=lines.join("\n"); const box=$("#copybox"); box.value=txt;
+  try{await navigator.clipboard.writeText(txt);$("#copied").textContent="Copied"}catch(e){box.hidden=false;box.select();$("#copied").textContent="Select and copy the text below"}
+});
+try{Object.assign(state,JSON.parse(localStorage.getItem("ie-dec")||"{}"))}catch(e){}
+render();
+(async()=>{
+  const timer=setTimeout(()=>{if(!col)$("#sync").textContent="Saved in this browser only"},10000);
+  try{
+    db=window.claude?await window.claude.use("db"):null;
+    if(!db){clearTimeout(timer);$("#sync").textContent="Saved in this browser only";return}
+    col=db.collection("answers");
+    col.onSnapshot(snap=>{clearTimeout(timer);snap.docs.forEach(d=>{const v=d.data();state[d.id]={choice:v.choice,remarks:v.remarks}});paint();$("#sync").textContent="Synced"},()=>{clearTimeout(timer);$("#sync").textContent="Couldn't load saved answers"});
+  }catch(e){clearTimeout(timer);$("#sync").textContent="Saved in this browser only"}
+})();
+</script>
