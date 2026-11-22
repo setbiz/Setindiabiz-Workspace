@@ -1,13 +1,13 @@
 # Google Ads
 
 ## Account
-- Account ID: TODO
+- Account ID: 1859576856 "SETINDIABIZ PRIVATE LIMITED 2026" (Supermetrics `AW`)
 - Access / owner: TODO
-- Billing currency: INR (confirm)
+- Billing currency: INR (confirmed 2026-11-22), time zone Asia/Calcutta, auto-tagging on
 
 ## Tracking
 - Tag: Google tag / GA4 + Enhanced Conversions (status: TODO verify)
-- Conversion events configured: TODO
+- Conversion events configured: GA4 form_submission / phone_click / whatsapp_click (all many-per-click), Lead form – Submit, legacy Smart-campaign and YouTube actions. No offline import. See `reports/2026-11-22-account-audit.md`
 - Offline / CRM conversion import: TODO
 
 ## Data access from Claude
