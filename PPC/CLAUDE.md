@@ -38,5 +38,18 @@ EGM artifact directory: PPC/egm/runs/<YYYY-MM-DD>-<slug>
 
 Other live monitors on the owner's Claude account (see `imports/claude/INDEX.md`): the daily Meta lead-quality watch (Cowork, 09:40 IST), a weekly paid-channel report (Mon 09:00 IST) and the monthly LeadChain reconciliation. Before proposing a Meta change, read the latest `meta/history/cowork-meta-ads-project/Lead_Quality_Watch_Log_*.md` and this repo's `meta/changelog.md`.
 
+## Sessions (from 22 Nov 2026: one session per platform)
+| Platform | Claude Code session | Owns |
+|---|---|---|
+| Meta | "Meta Ads – performance & optimisation (Setindiabiz)" `session_01E3dUdP3FXfPupuHiZhxPR8` | Domestic Meta campaigns; also runs the scheduled **weekly EGM review** (Mon 10:17 IST) and **monthly budget review** (2nd, 11:43 IST) |
+| Google Ads | `session_01E3dUdNrmVsUh7FgwGgryEs` | Domestic Google Ads |
+| Microsoft Ads | `session_01E3dUdQAswc8ZZrSqM6Rq1T` | Microsoft Advertising |
+| LinkedIn | `session_01E3dUdN7gu944sUrEf1nJ1h` | LinkedIn Ads |
+| X | `session_01E3dUdRce1e8Q2CeujH497q` | X Ads |
+| Reddit | `session_01E3dUdNUFubGZy62gRNmCWB` | Reddit Ads |
+| ChatGPT Ads | `session_01E3dUdQrhaDshKJXqBWUofy` | ChatGPT Ads (CFO, GST) |
+| India Entry / FDI | `session_01E3dUdNU5jc98N2iZX9z4T9` | All India-Entry campaigns on every platform (incl. SIB-05) |
+Rules: only the owning session changes a campaign; every change goes in that platform's `changelog.md`; the weekly review tags each action with its owning session. The original workspace session (`session_01E3dUdShDPFLiVzm7TkTTts`) was archived on 22 Nov 2026.
+
 ## Open items
 See `docs/migration-checklist.md` for moving in past Cowork and ChatGPT work.
