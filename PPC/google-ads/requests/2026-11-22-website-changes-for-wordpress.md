@@ -13,3 +13,6 @@ Why: Google Ads can only bid on real sales when the website passes Google's clic
 | W7 | `/lp/*` pages | `noindex` or canonical to the matching service page, if not already set | SEO: avoid duplicate content with service pages |
 
 Not to do: no "consultation-only" page built to get past Google review (circumvention-policy risk).
+
+## Status
+- 2026-11-22: sent to the "Landing page design and conversion optimization" session, as the owner asked. Not yet started there. Owner approval is required before any live change.
