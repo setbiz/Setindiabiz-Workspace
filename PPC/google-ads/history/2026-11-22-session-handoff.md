@@ -10,7 +10,7 @@ Source: a send_message handoff from the "Google Ads setup – company registrati
 - **Advice carried forward:** no "consultation-only" page to get past review (circumvention-policy risk), no further re-appeals, keep Company/GST on Meta. An escalation email to Google Ads support is drafted in Gmail and not sent; the owner will edit and send it.
 
 ## Open items carried forward
-1. Trademark rebuild (approval_ref apr_336e…c106d9) [verified `pending` 15:13 UTC]: re-send if the link has expired.
+1. Trademark rebuild: DONE. Re-sent and applied 22 Nov ~15:35 UTC (see changelog).
 2. Account-level sitelinks (OPC, About Us, Payment Options…): remove them in the Google Ads UI.
 3. Conversions: six actions are reportedly Primary, all "awaiting conversions". The recommendation was form_submission only as Primary; the owner has not decided.
 4. MCA GC 05/2026: the handoff says the official PDF is not verified, but `meta/changelog.md` (2 Nov) records owner verification against the original circular. Owner to confirm it applies to Google too.
