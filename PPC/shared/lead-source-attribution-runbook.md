@@ -83,7 +83,7 @@ The function is **idempotent** (writes only when the derived value differs from 
 Signals from the landing URL (Source URL + First Page Visited + dedicated UTM fields) are the "urlText"; the referrer domain is "refText"; both combined is "allText".
 
 0. **Meta lead-form platform** (`Meta_Ad_Type`): `ig` → Advt - Instagram · `fb` → Advt - Facebook · `an`/`msg` → Advt - Facebook
-1. **Paid click-IDs** (in urlText): `gclid`/`gbraid`/`wbraid`/`gad_source` → Advt - Google · `msclkid` → Advt - Microsoft · `li_fat_id` → Advt - LinkedIn · `rdt_cid` → Advt - Reddit · `twclid` → Advt - Twitter (X)
+1. **Paid click-IDs** (in urlText): `gclid`/`gbraid`/`wbraid`/`gad_source`, **or `utm_source=google` with `utm_medium=cpc|ppc|paid` (added 23 Nov 2026)** → Advt - Google · `msclkid` → Advt - Microsoft · `li_fat_id` → Advt - LinkedIn · `rdt_cid` → Advt - Reddit · `twclid` → Advt - Twitter (X)
 2. **Paid Meta via URL UTM** (`utm_medium=paid` + `utm_source=ig/fb/…`) → Advt - Instagram / Advt - Facebook
 3. **Email** (`utm_medium=email`, or `utm_source=newsletter/zeptomail/zohocampaigns`) → Advt - Email Campaign
 4. **AI** (referrer or utm_source): chatgpt/openai → AI - ChatGPT · perplexity → AI - Perplexity · gemini/bard → AI - Gemini · claude/anthropic → AI - Claude · copilot/deepseek/grok/meta.ai/you.com/poe/mistral/phind → AI - Other. *(Checked before search because gemini/copilot contain "google"/"bing".)*
@@ -253,7 +253,7 @@ void automation.autoClassifyLeadSource(String leadId)
 		newSource = "Advt - Facebook";
 	}
 	// 1) PAID click-IDs
-	else if(urlText.contains("gclid=") || urlText.contains("gbraid=") || urlText.contains("wbraid=") || urlText.contains("gad_source="))
+	else if(urlText.contains("gclid=") || urlText.contains("gbraid=") || urlText.contains("wbraid=") || urlText.contains("gad_source=") || (urlText.contains("utm_source=google") && (urlText.contains("utm_medium=cpc") || urlText.contains("utm_medium=ppc") || urlText.contains("utm_medium=paid"))))
 	{
 		newSource = "Advt - Google";
 	}
@@ -404,7 +404,7 @@ void automation.autoClassifyLeadSource(String leadId)
 |---|---|
 | `Meta_Ad_Type = ig` | Advt - Instagram |
 | `Meta_Ad_Type = fb` | Advt - Facebook |
-| `gclid=` / `gbraid=` / `wbraid=` / `gad_source=` | Advt - Google |
+| `gclid=` / `gbraid=` / `wbraid=` / `gad_source=`, or `utm_source=google` + `utm_medium=cpc/ppc/paid` (23 Nov 2026) | Advt - Google |
 | `msclkid=` | Advt - Microsoft |
 | `li_fat_id=` | Advt - LinkedIn |
 | `rdt_cid=` | Advt - Reddit |
