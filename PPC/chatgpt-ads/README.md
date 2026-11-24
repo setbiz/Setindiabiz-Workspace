@@ -14,15 +14,15 @@
 - Supermetrics source `CGPTA`: authenticated (Nov 2026). Its `campaign` report defaults to UTC; totals can differ between report types, so check billing. Fallback: CSV export from ads.openai.com into reports/raw/
 
 ## Current structure
-_As read 22 Nov 2026. See `reports/2026-11-22-a5-status-and-account-audit.md`._
+_Updated 24 Nov 2026 after the pauses (first read 22 Nov). See `reports/2026-11-22-a5-status-and-account-audit.md`._
 | Campaign | Service | Daily budget (₹) | Status | Delivering? | Session |
 |---|---|---|---|---|---|
-| CFO Services | Virtual CFO / accounting | 500 | ENABLED | Yes (1 approved ad) | ChatGPT Ads |
+| CFO Services | Virtual CFO / accounting | 500 | PAUSED 24 Nov | A5 window ended (₹6,097 spent) | ChatGPT Ads |
 | GST Filing | GST returns | 500 | ENABLED | No spend since 14 Nov | ChatGPT Ads |
-| Trademark Registration | Trademark | 2,000 | ENABLED | Never spent | ChatGPT Ads |
-| DPIIT Recognition | DPIIT | 500 | ENABLED | Never spent | ChatGPT Ads |
-| Setindiabiz \| Company Registration \| India \| Leads | Company registration | 2,900 | ENABLED | Never spent; no UTM | ChatGPT Ads |
-| Setindiabiz \| Company Annual Return \| India \| Leads | ROC annual filing | 2,500 | ENABLED | Never spent; no UTM | ChatGPT Ads |
+| Trademark Registration | Trademark | 2,000 | PAUSED 24 Nov | Never spent | ChatGPT Ads |
+| DPIIT Recognition | DPIIT | 500 | PAUSED 24 Nov | Never spent | ChatGPT Ads |
+| Setindiabiz \| Company Registration \| India \| Leads | Company registration | 2,900 | PAUSED 24 Nov | Never spent; no UTM | ChatGPT Ads |
+| Setindiabiz \| Company Annual Return \| India \| Leads | ROC annual filing | 2,500 | PAUSED 24 Nov | Never spent; no UTM | ChatGPT Ads |
 | Setindiabiz Private Limited campaign | Company registration | 2,900 | PAUSED | No; no UTM | ChatGPT Ads |
 | Branch & Liaison Office Setup | India entry | 500 | ENABLED | No spend since 1 Nov | India Entry |
 | India Entry | India entry | 3,500 | ENABLED | Never spent | India Entry |
